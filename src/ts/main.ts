@@ -1,7 +1,7 @@
 // tsc --noEmit --watch
 // import "./style.css";
 import typescriptLogo from "../../public/typescript.svg";
-import { setupCounter } from "./counter";
+// import { setupCounter } from "./counter";
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div>
@@ -21,11 +21,15 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   </div>
 `;
 
-// function timeout(s: number): Promise<number> {
-//   return new Promise((_, reject) => {
-//     setTimeout(() => {
-//       reject(new Error(`Request took too long! Timeout after ${s} seconds`));
-//     });
-//   });
-// }
+
 setupCounter(document.querySelector<HTMLButtonElement>("#counter")!);
+
+export function setupCounter(element: HTMLButtonElement) {
+  let counter = 0;
+  const setCounter = (count: number) => {
+    counter = count;
+    element.innerHTML = `count is ${counter}`;
+  };
+  element.addEventListener("click", () => setCounter(counter + 1));
+  setCounter(0);
+}
