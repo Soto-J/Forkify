@@ -1,68 +1,93 @@
 import { API_URL } from "../config";
 import { getJSON } from "../helper/helper";
 
+// Will come back to interface
 interface IRecipeModel {
-  state: State;
-  getRecipes: (hashId: string) => Promise<void>;
+  state?: {
+    recipe: {
+      id: number;
+      title: string;
+      publisher: string;
+      sourceUrl: string;
+      image: string;
+      servings: number;
+      cookingTime: number;
+      ingredients: [{ quantity: string; unit: number; description: string }];
+    };
+    search: {
+      query: string;
+      results: [];
+    };
+  };
+
+  getRecipes(hashId: string): Promise<void>;
+  loadSearchResult(query: string): Promise<void>;
 }
-export type State = { recipe: Recipe };
-export type Recipe = {
-  id: number;
-  title: string;
-  publisher: string;
-  sourceUrl: string;
-  image: string;
-  servings: number;
-  cookingTime: number;
-  ingredients: [{ quantity: string; unit: number; description: string }];
-};
 
-// **********
-class RecipeModel implements IRecipeModel {
-  state!: State;
+// **************************
+class RecipeModel {
+  state = {
+    recipe: {},
+    search: {
+      query: "",
+      results: [],
+    },
+  };
 
-  async getRecipes(hashId: string): Promise<void> {
+  async getRecipe(hashId: string): Promise<void> {
     try {
-      const data = await getJSON(`${API_URL}/${hashId}`);
-
-      // console.log(data);
-      this.state = this.reformatKeys(data);
+      const data = await getJSON(`${API_URL}${hashId}`);
+      
+      const recipe = this.formatRecipeKeys(data);
+      
+      this.state.recipe = recipe;
     } catch (error) {
-      console.log(`recipeModel😎: ${error}`);
+      throw error;
     }
   }
 
-  private reformatKeys(data: {}): State {
-    const [newState] = Object.values(data).map((val: any) => {
+  async loadSearchResult(query: string): Promise<void> {
+    try {
+      this.state.search.query = query;
+      
+      const data = await getJSON(`${API_URL}?search=${query}`);
+
+      const searchResults = this.formartSearchResultsKeys(data);
+      
+      this.state.search.results = searchResults;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // ************* Reformat Keys of Fetched Data **************
+  private formatRecipeKeys(data: any) {
+    const [recipe] = Object.values(data).map((val: any) => {
       return {
-        recipe: {
-          id: val.id,
-          title: val.title,
-          publisher: val.publisher,
-          sourceUrl: val.source_url,
-          image: val.image_url,
-          servings: val.servings,
-          cookingTime: val.cooking_time,
-          ingredients: val.ingredients,
-        },
+        id: val.id,
+        title: val.title,
+        publisher: val.publisher,
+        sourceUrl: val.source_url,
+        image: val.image_url,
+        servings: val.servings,
+        cookingTime: val.cooking_time,
+        ingredients: val.ingredients,
       };
     });
-    return newState;
+    return recipe;
+  }
+
+  private formartSearchResultsKeys(data: any) {
+    const results = data.recipes.map((val: any) => {
+      return {
+        id: val.id,
+        title: val.title,
+        image: val.image_url,
+        publisher: val.publisher,
+      };
+    });
+    return results;
   }
 }
 
 export default new RecipeModel();
-// Export RecipeModel created.
-
-// export type State = {
-//   recipe: {
-//     id: number;
-//     title: string;
-//     publisher: string;
-//     sourceUrl: string;
-//     image: string;
-//     servings: number;
-//     cookingTime: number;
-//     ingredients: [{ quantity: string; unit: number; description: string }];
-//   };
-// };

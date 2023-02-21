@@ -1,28 +1,59 @@
-import { Recipe } from "../models/recipeModel";
 import Fraction from "fraction.js";
 import fracty from "fracty";
 
+type Handler = () => {};
+
+// **********
 class RecipeView {
   private _recipeEl = document.querySelector<HTMLDivElement>(".recipe")!;
-  private _recipeData!: Recipe;
+  private _recipeData: any;
+  private _message = `Start by searching for a recipe or an ingredient. Have fun!`;
+  private _errorMessage = `We could not find that recipe. Please try another one!`;
 
-  set render(recipeData: Recipe) {
+  set render(recipeData: {}) {
     this._recipeData = recipeData;
-    console.log(this._recipeData);
+    // console.log(this._recipeData);
 
     const markup = this.generateMarkup();
     this.removeInnerHTML();
     this._recipeEl!.insertAdjacentHTML("afterbegin", markup);
   }
 
+  // Publisher Subscriber Pattern - init
+  renderHandler(handler: Handler): void {
+    ["hashchange", "load"].forEach((ev) =>
+      window.addEventListener(ev, handler)
+    );
+  }
+
   renderSpinner(): void {
     this.removeInnerHTML();
-    const spinnerMarkup = this.spinnerMarkup();
 
+    const spinnerMarkup = this.spinnerMarkup();
     this._recipeEl.insertAdjacentHTML("afterbegin", spinnerMarkup);
   }
 
-  private spinnerMarkup() {
+  renderMessage(message = this._message): void {
+    this.removeInnerHTML();
+
+    this._recipeEl.insertAdjacentHTML(
+      "afterbegin",
+      this.messageMarkup(message)
+    );
+  }
+
+  renderErrorMsg(errorMsg = this._errorMessage): void {
+    this.removeInnerHTML();
+
+    this._recipeEl.insertAdjacentHTML("afterbegin", this.errorMarkup(errorMsg));
+  }
+
+  // ********** HTML Markups  ************* //
+  private removeInnerHTML() {
+    this._recipeEl!.innerHTML = "";
+  }
+
+  private spinnerMarkup(): string {
     return `
       <div class="spinner">
         <svg>
@@ -30,17 +61,6 @@ class RecipeView {
         </svg>
       </div>
     `;
-  }
-
-  // Publisher Subscriber Pattern - init
-  renderHandler(handler: () => {}): void {
-    ["hashchange", "load"].forEach((ev) =>
-      window.addEventListener(ev, handler)
-    );
-  }
-
-  private removeInnerHTML() {
-    this._recipeEl!.innerHTML = "";
   }
 
   private generateMarkup(): string {
@@ -130,7 +150,7 @@ class RecipeView {
     `;
   }
 
-  private ingredientsList() {
+  private ingredientsList(): string {
     return `${this._recipeData.ingredients
       .map(
         (ingredient: any) => `
@@ -149,6 +169,32 @@ class RecipeView {
       `
       )
       .join("")}`;
+  }
+
+  private messageMarkup(message = this._message): string {
+    return `
+      <div class="message">
+        <div>
+          <svg>
+            <use href="src/img/icons.svg#icon-smile"></use>
+          </svg>
+        </div>
+        <p>${message}</p>
+      </div>
+    `;
+  }
+
+  private errorMarkup(errorMsg: string): string {
+    return `
+      <div class="error">
+        <div>
+          <svg>
+            <use href="src/img/icons.svg#icon-alert-triangle"></use>
+          </svg>
+        </div>
+        <p>${errorMsg}</p>
+      </div> 
+    `;
   }
 }
 
