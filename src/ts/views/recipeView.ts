@@ -32,6 +32,13 @@ class RecipeView {
     `;
   }
 
+  // Publisher Subscriber Pattern - init
+  renderHandler(handler: () => {}): void {
+    ["hashchange", "load"].forEach((ev) =>
+      window.addEventListener(ev, handler)
+    );
+  }
+
   private removeInnerHTML() {
     this._recipeEl!.innerHTML = "";
   }

@@ -2,10 +2,7 @@
 import icons from "../img/icons.svg";
 import * as Model from "./models/model";
 import RecipeModel, { Recipe } from "./models/recipeModel";
-import RecipeView from "./views/recipeView";
-import * as Utility from "./helper/helper";
-
-const recipeContainerEl = document.querySelector<HTMLDivElement>(".recipe")!;
+import RecipeView from "./views/RecipeView";
 
 async function recipeController(): Promise<void> {
   try {
@@ -26,6 +23,8 @@ async function recipeController(): Promise<void> {
   }
 }
 
-["hashchange", "load"].forEach((ev) =>
-  window.addEventListener(ev, recipeController)
-);
+function init() {
+  RecipeView.renderHandler(recipeController);
+}
+
+init();
