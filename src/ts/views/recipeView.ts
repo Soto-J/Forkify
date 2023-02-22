@@ -1,18 +1,16 @@
-import fracty from "fracty";
+import { Handler } from "../types/type";
 import { View } from "./View";
+import fracty from "fracty";
 
-type Handler = () => {};
-
-// **********
 class RecipeView extends View {
-  _parentEl = document.querySelector<HTMLDivElement>(".recipe")!;
-  _errorMessage = `We could not find that recipe. Please try another one!`;
-  _message = `Start by searching for a recipe or an ingredient. Have fun!`;
+  protected _parentEl = document.querySelector<HTMLDivElement>(".recipe")!;
+  protected _errorMessage = `We could not find that recipe. Please try another one!`;
+  protected _message = `Start by searching for a recipe or an ingredient. Have fun!`;
 
   // Publisher Subscriber Pattern - init
-  renderHandler(handler: Handler): void {
+  renderHandler(recipeController: Handler): void {
     ["hashchange", "load"].forEach((ev) =>
-      window.addEventListener(ev, handler)
+      window.addEventListener(ev, recipeController)
     );
   }
 
@@ -21,12 +19,12 @@ class RecipeView extends View {
     return `
       <figure class="recipe__fig">
         <img 
-          src="${this._recipeData.image}" 
-          alt="${this._recipeData.title}" 
+          src="${this._data.image}" 
+          alt="${this._data.title}" 
           class="recipe__img" 
         />
         <h1 class="recipe__title">
-          <span>${this._recipeData.title}</span>
+          <span>${this._data.title}</span>
         </h1>
       </figure>
 
@@ -36,7 +34,7 @@ class RecipeView extends View {
             <use href="src/img/icons.svg#icon-clock"></use>
           </svg>
           <span class="recipe__info-data recipe__info-data--minutes">
-            ${this._recipeData.cookingTime}
+            ${this._data.cookingTime}
           </span>
           <span class="recipe__info-text">minutes</span>
         </div>
@@ -46,7 +44,7 @@ class RecipeView extends View {
             <use href="src/img/icons.svg#icon-users"></use>
           </svg>
           <span class="recipe__info-data recipe__info-data--people">
-            ${this._recipeData.servings}
+            ${this._data.servings}
           </span>
           <span class="recipe__info-text">servings</span>
           <div class="recipe__info-buttons">
@@ -87,12 +85,12 @@ class RecipeView extends View {
         <h2 class="heading--2">How to cook it</h2>
         <p class="recipe__directions-text">
           This recipe was carefully designed and tested by
-          <span class="recipe__publisher">${this._recipeData.publisher}</span>.
+          <span class="recipe__publisher">${this._data.publisher}</span>.
           Please check out directions at their website.
         </p>
         <a
           class="btn--small recipe__btn"
-          href="${this._recipeData.sourceUrl}"
+          href="${this._data.sourceUrl}"
           target="_blank"
         >
           <span>Directions</span>
@@ -105,7 +103,7 @@ class RecipeView extends View {
   }
 
   private ingredientsList(): string {
-    return `${this._recipeData.ingredients
+    return `${this._data.ingredients
       .map(
         (ingredient: any) => `
         <li class="recipe__ingredient">
@@ -120,7 +118,7 @@ class RecipeView extends View {
             ${ingredient.description}
           </div>
         </li>
-      `
+        `
       )
       .join("")}`;
   }

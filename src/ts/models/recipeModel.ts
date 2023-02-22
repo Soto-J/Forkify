@@ -51,7 +51,8 @@ class RecipeModel {
       this.state.search.query = query;
       
       const data = await getJSON(`${API_URL}?search=${query}`);
-
+      console.log(data);
+      
       const searchResults = this.formartSearchResultsKeys(data);
       
       this.state.search.results = searchResults;
@@ -60,7 +61,7 @@ class RecipeModel {
     }
   }
 
-  // ************* Reformat Keys of Fetched Data **************
+  // ************* Reformat Keys of Fetched Data ************ \\
   private formatRecipeKeys(data: any) {
     const [recipe] = Object.values(data).map((val: any) => {
       return {

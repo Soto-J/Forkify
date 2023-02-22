@@ -1,14 +1,18 @@
 export class View {
-  protected _recipeData: any;
+  protected _data: any;
   protected _parentEl: any;
   protected _message!: string;
   protected _errorMessage!: string;
 
-  set render(recipeData: {}) {
-    this._recipeData = recipeData;
-    // console.log(this._recipeData);
-    const markup = this.generateMarkup();
+  render(data: any) {
+    if (!data || (Array.isArray(data) && data.length === 0)) {
+      return this.renderErrorMsg();
+    }
     
+    this._data = data;
+
+    const markup = this.generateMarkup();
+
     this.removeInnerHTML();
     this._parentEl!.insertAdjacentHTML("afterbegin", markup);
   }
@@ -17,7 +21,7 @@ export class View {
     this.removeInnerHTML();
 
     const spinnerMarkup = this.spinnerMarkup();
-    
+
     this._parentEl.insertAdjacentHTML("afterbegin", spinnerMarkup);
   }
 

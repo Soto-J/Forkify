@@ -1,4 +1,3 @@
-// // https://forkify-api.herokuapp.com/v2
 import icons from "../img/icons.svg";
 import * as Model from "./models/Model";
 import RecipeModel from "./models/RecipeModel";
@@ -17,15 +16,14 @@ async function recipeController(): Promise<void> {
     // **********************
 
     await RecipeModel.getRecipe(hashId);
-    // Display recipe
-    RecipeView.render = RecipeModel.state.recipe!;
+    // Display main recipe
+    RecipeView.render(RecipeModel.state.recipe);
   } catch (error) {
     RecipeView.renderErrorMsg();
   }
 }
 
-// On Submit controller
-async function searchController() {
+async function searchController(): Promise<void> {
   try {
     ResultsView.renderSpinner();
 
@@ -34,8 +32,11 @@ async function searchController() {
 
     await RecipeModel.loadSearchResult(query);
     console.log(RecipeModel.state);
+
+    // Render results list
+    ResultsView.render(RecipeModel.state.search.results);
   } catch (error) {
-    console.log(error);
+    ResultsView.renderErrorMsg();
   }
 }
 

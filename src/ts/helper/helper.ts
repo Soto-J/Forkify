@@ -1,8 +1,8 @@
-import { TIMEOUT_SEC } from "../config";
+import { TIME_IN_SEC } from "../config";
 
 async function getJSON(url: string) {
   try {
-    const response = await Promise.race([fetch(url), timeout(TIMEOUT_SEC)]);
+    const response = await Promise.race([fetch(url), timeout(TIME_IN_SEC)]);
 
     const { data } = await response.json();
 
