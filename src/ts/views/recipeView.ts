@@ -1,23 +1,13 @@
-import Fraction from "fraction.js";
 import fracty from "fracty";
+import { View } from "./View";
 
 type Handler = () => {};
 
 // **********
-class RecipeView {
-  private _recipeEl = document.querySelector<HTMLDivElement>(".recipe")!;
-  private _recipeData: any;
-  private _message = `Start by searching for a recipe or an ingredient. Have fun!`;
-  private _errorMessage = `We could not find that recipe. Please try another one!`;
-
-  set render(recipeData: {}) {
-    this._recipeData = recipeData;
-    // console.log(this._recipeData);
-
-    const markup = this.generateMarkup();
-    this.removeInnerHTML();
-    this._recipeEl!.insertAdjacentHTML("afterbegin", markup);
-  }
+class RecipeView extends View {
+  _parentEl = document.querySelector<HTMLDivElement>(".recipe")!;
+  _errorMessage = `We could not find that recipe. Please try another one!`;
+  _message = `Start by searching for a recipe or an ingredient. Have fun!`;
 
   // Publisher Subscriber Pattern - init
   renderHandler(handler: Handler): void {
@@ -26,44 +16,8 @@ class RecipeView {
     );
   }
 
-  renderSpinner(): void {
-    this.removeInnerHTML();
-
-    const spinnerMarkup = this.spinnerMarkup();
-    this._recipeEl.insertAdjacentHTML("afterbegin", spinnerMarkup);
-  }
-
-  renderMessage(message = this._message): void {
-    this.removeInnerHTML();
-
-    this._recipeEl.insertAdjacentHTML(
-      "afterbegin",
-      this.messageMarkup(message)
-    );
-  }
-
-  renderErrorMsg(errorMsg = this._errorMessage): void {
-    this.removeInnerHTML();
-
-    this._recipeEl.insertAdjacentHTML("afterbegin", this.errorMarkup(errorMsg));
-  }
-
-  // ********** HTML Markups  ************* //
-  private removeInnerHTML() {
-    this._recipeEl!.innerHTML = "";
-  }
-
-  private spinnerMarkup(): string {
-    return `
-      <div class="spinner">
-        <svg>
-          <use href="src/img/icons.svg#icon-loader"></use>
-        </svg>
-      </div>
-    `;
-  }
-
-  private generateMarkup(): string {
+  // *************** HTML markUp ******************* \\
+  protected override generateMarkup(): string {
     return `
       <figure class="recipe__fig">
         <img 
@@ -169,32 +123,6 @@ class RecipeView {
       `
       )
       .join("")}`;
-  }
-
-  private messageMarkup(message = this._message): string {
-    return `
-      <div class="message">
-        <div>
-          <svg>
-            <use href="src/img/icons.svg#icon-smile"></use>
-          </svg>
-        </div>
-        <p>${message}</p>
-      </div>
-    `;
-  }
-
-  private errorMarkup(errorMsg: string): string {
-    return `
-      <div class="error">
-        <div>
-          <svg>
-            <use href="src/img/icons.svg#icon-alert-triangle"></use>
-          </svg>
-        </div>
-        <p>${errorMsg}</p>
-      </div> 
-    `;
   }
 }
 

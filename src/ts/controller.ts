@@ -3,6 +3,7 @@ import icons from "../img/icons.svg";
 import * as Model from "./models/Model";
 import RecipeModel from "./models/RecipeModel";
 import RecipeView from "./views/RecipeView";
+import ResultsView from "./views/ResultsView";
 import SearchView from "./views/SearchView";
 
 async function recipeController(): Promise<void> {
@@ -10,34 +11,39 @@ async function recipeController(): Promise<void> {
     const hashId = window.location.hash.slice(1);
     if (!hashId) return;
     RecipeView.renderSpinner();
-
     // ********* Get recipe data Without Class ********//
     // await Model.loadRecipe(hashId);
     // RecipeView.render = <Recipe>Model.state.recipe;
+    // **********************
 
-    // ****** Get recipe data with Class ******** //
     await RecipeModel.getRecipe(hashId);
     // Display recipe
     RecipeView.render = RecipeModel.state.recipe!;
-  } catch (error: any) {
+  } catch (error) {
     RecipeView.renderErrorMsg();
   }
 }
 
-async function searchResultController() {
+// On Submit controller
+async function searchController() {
   try {
-    const query = SearchView.getQuery();
+    ResultsView.renderSpinner();
+
+    const query = SearchView.getSearchQuery();
     if (!query) return;
-    console.log(query);
 
     await RecipeModel.loadSearchResult(query);
-  } catch (error) {}
+    console.log(RecipeModel.state);
+  } catch (error) {
+    console.log(error);
+  }
 }
-console.log(RecipeModel.state);
 
 function init() {
   RecipeView.renderHandler(recipeController);
-  SearchView.searchHandler(searchResultController);
+  SearchView.searchHandler(searchController);
 }
+
+console.log(RecipeModel.state);
 
 init();

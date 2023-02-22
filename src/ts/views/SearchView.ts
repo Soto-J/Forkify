@@ -1,19 +1,27 @@
-class SearchView {
+import { View } from "./View";
+
+class SearchView extends View {
   private _searchFormEl = document.querySelector<HTMLFormElement>(".search")!;
   private _searchInputEl =
     document.querySelector<HTMLInputElement>(".search__field")!;
 
-  getQuery(): string {
-    const value = this._searchInputEl.value.trim();
-    return value;
+  getSearchQuery(): string {
+    const query = this._searchInputEl.value.trim().toLowerCase();
+    this.clearSearchInput();
+
+    return query;
   }
 
   // Publisher Subscriber
-  searchHandler(handler: () => {}) {
+  searchHandler(searchController: () => {}) {
     this._searchFormEl.addEventListener("submit", (e: Event) => {
       e.preventDefault();
-      handler();
+      searchController();
     });
+  }
+
+  private clearSearchInput() {
+    this._searchInputEl.value = "";
   }
 }
 
