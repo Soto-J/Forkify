@@ -31,6 +31,7 @@ class RecipeModel {
     search: {
       query: "",
       results: [],
+      page: 1,
       resultsPerPage: RES_PER_PAGE,
     },
   };
@@ -57,15 +58,17 @@ class RecipeModel {
       const searchResults = this.formartSearchResultsKeys(data);
 
       this.state.search.results = searchResults;
-      // console.log(this.getSearchResultPerPage(1));
     } catch (error) {
       throw error;
     }
   }
 
-  getSearchResultPerPage(page: number) {
+  getSearchResultPerPage(page = this.state.search.page) {
+    this.state.search.page = page;
+
     const start = (page - 1) * this.state.search.resultsPerPage;
     const end = page * this.state.search.resultsPerPage;
+
     return this.state.search.results.slice(start, end);
   }
 
