@@ -4,11 +4,11 @@ export class View {
   protected _message!: string;
   protected _errorMessage!: string;
 
-  render(data: any) {
+  render(data: {} | []) {
     if (!data || (Array.isArray(data) && data.length === 0)) {
       return this.renderErrorMsg();
     }
-    
+
     this._data = data;
 
     const markup = this.generateMarkup();

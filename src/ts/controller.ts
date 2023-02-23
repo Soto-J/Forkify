@@ -34,7 +34,7 @@ async function searchController(): Promise<void> {
     console.log(RecipeModel.state);
 
     // Render results list
-    ResultsView.render(RecipeModel.state.search.results);
+    ResultsView.render(RecipeModel.getSearchResultPerPage(1));
   } catch (error) {
     ResultsView.renderErrorMsg();
   }

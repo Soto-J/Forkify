@@ -1,4 +1,4 @@
-import { API_URL } from "../config";
+import { API_URL, RES_PER_PAGE } from "../config";
 import { getJSON } from "../helper/helper";
 
 // Will come back to interface
@@ -31,15 +31,16 @@ class RecipeModel {
     search: {
       query: "",
       results: [],
+      resultsPerPage: RES_PER_PAGE,
     },
   };
 
   async getRecipe(hashId: string): Promise<void> {
     try {
       const data = await getJSON(`${API_URL}${hashId}`);
-      
+
       const recipe = this.formatRecipeKeys(data);
-      
+
       this.state.recipe = recipe;
     } catch (error) {
       throw error;
@@ -49,16 +50,23 @@ class RecipeModel {
   async loadSearchResult(query: string): Promise<void> {
     try {
       this.state.search.query = query;
-      
+
       const data = await getJSON(`${API_URL}?search=${query}`);
       console.log(data);
-      
+
       const searchResults = this.formartSearchResultsKeys(data);
-      
+
       this.state.search.results = searchResults;
+      // console.log(this.getSearchResultPerPage(1));
     } catch (error) {
       throw error;
     }
+  }
+
+  getSearchResultPerPage(page: number) {
+    const start = (page - 1) * this.state.search.resultsPerPage;
+    const end = page * this.state.search.resultsPerPage;
+    return this.state.search.results.slice(start, end);
   }
 
   // ************* Reformat Keys of Fetched Data ************ \\
