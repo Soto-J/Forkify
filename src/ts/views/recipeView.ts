@@ -3,9 +3,9 @@ import { View } from "./View";
 import fracty from "fracty";
 
 class RecipeView extends View {
-  protected _parentEl = document.querySelector<HTMLDivElement>(".recipe")!;
-  protected _errorMessage = `We could not find that recipe. Please try another one!`;
-  protected _message = `Start by searching for a recipe or an ingredient. Have fun!`;
+  protected parentEl = document.querySelector<HTMLDivElement>(".recipe")!;
+  protected errorMessage = `We could not find that recipe. Please try another one!`;
+  protected message = `Start by searching for a recipe or an ingredient. Have fun!`;
 
   // Publisher Subscriber Pattern - init
   renderHandler(recipeController: Handler): void {
@@ -19,12 +19,12 @@ class RecipeView extends View {
     return `
       <figure class="recipe__fig">
         <img 
-          src="${this._data.image}" 
-          alt="${this._data.title}" 
+          src="${this.data.image}" 
+          alt="${this.data.title}" 
           class="recipe__img" 
         />
         <h1 class="recipe__title">
-          <span>${this._data.title}</span>
+          <span>${this.data.title}</span>
         </h1>
       </figure>
 
@@ -34,7 +34,7 @@ class RecipeView extends View {
             <use href="src/img/icons.svg#icon-clock"></use>
           </svg>
           <span class="recipe__info-data recipe__info-data--minutes">
-            ${this._data.cookingTime}
+            ${this.data.cookingTime}
           </span>
           <span class="recipe__info-text">minutes</span>
         </div>
@@ -44,7 +44,7 @@ class RecipeView extends View {
             <use href="src/img/icons.svg#icon-users"></use>
           </svg>
           <span class="recipe__info-data recipe__info-data--people">
-            ${this._data.servings}
+            ${this.data.servings}
           </span>
           <span class="recipe__info-text">servings</span>
           <div class="recipe__info-buttons">
@@ -85,12 +85,12 @@ class RecipeView extends View {
         <h2 class="heading--2">How to cook it</h2>
         <p class="recipe__directions-text">
           This recipe was carefully designed and tested by
-          <span class="recipe__publisher">${this._data.publisher}</span>.
+          <span class="recipe__publisher">${this.data.publisher}</span>.
           Please check out directions at their website.
         </p>
         <a
           class="btn--small recipe__btn"
-          href="${this._data.sourceUrl}"
+          href="${this.data.sourceUrl}"
           target="_blank"
         >
           <span>Directions</span>
@@ -103,7 +103,7 @@ class RecipeView extends View {
   }
 
   private ingredientsList(): string {
-    return `${this._data.ingredients
+    return `${this.data.ingredients
       .map(
         (ingredient: any) => `
         <li class="recipe__ingredient">

@@ -3,26 +3,33 @@ import { getJSON } from "../helper/helper";
 
 // Will come back to interface
 interface IRecipeModel {
-  state?: {
-    recipe: {
-      id: number;
-      title: string;
-      publisher: string;
-      sourceUrl: string;
-      image: string;
-      servings: number;
-      cookingTime: number;
-      ingredients: [{ quantity: string; unit: number; description: string }];
-    };
-    search: {
-      query: string;
-      results: [];
-    };
-  };
+  state?: State;
 
   getRecipes(hashId: string): Promise<void>;
   loadSearchResult(query: string): Promise<void>;
+  getSearchResultPerPage(page: number): any[];
 }
+
+type State = {
+  recipe: Recipe;
+  search: Search;
+};
+
+type Recipe = {
+  id: number;
+  title: string;
+  publisher: string;
+  sourceUrl: string;
+  image: string;
+  servings: number;
+  cookingTime: number;
+  ingredients: [{ quantity: string; unit: number; description: string }];
+};
+
+type Search = {
+  query: string;
+  results: [{ id: number; title: string; image: string }];
+};
 
 // **************************
 class RecipeModel {
@@ -40,7 +47,7 @@ class RecipeModel {
     try {
       const data = await getJSON(`${API_URL}${hashId}`);
 
-      const recipe = this.formatRecipeKeys(data);
+      const recipe = this._formatRecipeKeys(data);
 
       this.state.recipe = recipe;
     } catch (error) {
@@ -55,7 +62,7 @@ class RecipeModel {
       const data = await getJSON(`${API_URL}?search=${query}`);
       console.log(data);
 
-      const searchResults = this.formartSearchResultsKeys(data);
+      const searchResults = this._formartSearchResultsKeys(data);
 
       this.state.search.results = searchResults;
     } catch (error) {
@@ -73,7 +80,7 @@ class RecipeModel {
   }
 
   // ************* Reformat Keys of Fetched Data ************ \\
-  private formatRecipeKeys(data: any) {
+  private _formatRecipeKeys(data: any) {
     const [recipe] = Object.values(data).map((val: any) => {
       return {
         id: val.id,
@@ -89,7 +96,7 @@ class RecipeModel {
     return recipe;
   }
 
-  private formartSearchResultsKeys(data: any) {
+  private _formartSearchResultsKeys(data: any) {
     const results = data.recipes.map((val: any) => {
       return {
         id: val.id,

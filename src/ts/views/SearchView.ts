@@ -8,7 +8,7 @@ class SearchView extends View {
 
   getSearchQuery(): string {
     const query = this._searchInputEl.value.trim().toLowerCase();
-    this.clearInput();
+    this._clearInput();
 
     return query;
   }
@@ -21,7 +21,7 @@ class SearchView extends View {
     });
   }
 
-  private clearInput() {
+  private _clearInput() {
     this._searchInputEl.value = "";
   }
 }

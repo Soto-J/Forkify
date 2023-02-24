@@ -1,47 +1,43 @@
 export class View {
-  protected _data: any;
-  protected _parentEl: any;
-  protected _message!: string;
-  protected _errorMessage!: string;
+  protected data: any;
+  protected parentEl: any;
+  protected message!: string;
+  protected errorMessage!: string;
 
-  render(data: {} | []) {
+  render(data: any) {
     if (!data || (Array.isArray(data) && data.length === 0)) {
       return this.renderErrorMsg();
     }
 
-    this._data = data;
+    this.data = data;
 
     const markup = this.generateMarkup();
 
-    this.removeInnerHTML();
-    this._parentEl!.insertAdjacentHTML("afterbegin", markup);
+    this.parentEl!.innerHTML = "";
+    this.parentEl!.insertAdjacentHTML("afterbegin", markup);
   }
 
   renderSpinner(): void {
-    this.removeInnerHTML();
+    this.parentEl!.innerHTML = "";
 
     const spinnerMarkup = this.spinnerMarkup();
 
-    this._parentEl.insertAdjacentHTML("afterbegin", spinnerMarkup);
+    this.parentEl.insertAdjacentHTML("afterbegin", spinnerMarkup);
   }
 
-  renderMessage(message = this._message): void {
-    this.removeInnerHTML();
+  renderMessage(message = this.message): void {
+    this.parentEl!.innerHTML = "";
 
-    this._parentEl.insertAdjacentHTML(
+    this.parentEl.insertAdjacentHTML(
       "afterbegin",
       this.messageMarkup(message)
     );
   }
 
-  renderErrorMsg(errorMsg = this._errorMessage): void {
-    this.removeInnerHTML();
+  renderErrorMsg(errorMsg = this.errorMessage): void {
+    this.parentEl!.innerHTML = "";
 
-    this._parentEl.insertAdjacentHTML("afterbegin", this.errorMarkup(errorMsg));
-  }
-
-  protected removeInnerHTML(): void {
-    this._parentEl!.innerHTML = "";
+    this.parentEl.insertAdjacentHTML("afterbegin", this.errorMarkup(errorMsg));
   }
 
   protected spinnerMarkup(): string {
@@ -54,7 +50,7 @@ export class View {
     `;
   }
 
-  protected messageMarkup(message = this._message): string {
+  protected messageMarkup(message = this.message): string {
     return `
       <div class="message">
         <div>

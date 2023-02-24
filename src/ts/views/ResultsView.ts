@@ -1,14 +1,14 @@
 import { View } from "./View";
 
 class ResultsView extends View {
-  protected _parentEl = document.querySelector(".results")!;
-  protected _errorMessage = `No recipes found for your query!`;
-  protected _message = ``;
+  protected parentEl = document.querySelector<HTMLUListElement>(".results")!;
+  protected errorMessage = `No recipes found for your query!`;
+  protected message = ``;
 
   protected override generateMarkup() {
-    console.log(this._data);
+    console.log(this.data);
 
-    return this._data
+    return this.data
       .map((result: any) => {
         //  preview__link--active
         return `                    
