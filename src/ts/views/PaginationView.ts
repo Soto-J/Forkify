@@ -3,16 +3,17 @@ import { View } from "./View";
 class PaginationView extends View {
   protected parentEl = document.querySelector<HTMLDivElement>(".pagination")!;
 
-  onClickHandler() {
+  onClickHandler(controller: any) {
     this.parentEl.addEventListener("click", (e) => {
       e.preventDefault();
+      // only trigger if element has ".btn--inline"
+      const btn: HTMLButtonElement = (e.target as HTMLButtonElement).closest(
+        ".btn--inline"
+      )!;
+      if (!btn) return;
 
-      const target = (e.target as HTMLElement).closest(".btn--inline");
-      if (!target) return;
-
-      console.log(target);
-      
-      console.log(target.className);
+      const goToPage = Number(btn.dataset.goto);
+      controller(goToPage);
     });
   }
 
@@ -21,7 +22,6 @@ class PaginationView extends View {
     const numOfPages = Math.ceil(
       this.data.results.length / this.data.resultsPerPage
     );
-
     console.log(`# Pages = ${numOfPages}`);
     console.log(`current Page = ${currentPage}`);
 
@@ -36,25 +36,18 @@ class PaginationView extends View {
 
   // ********** HTML Button Markups *********** \\
   private _prevAndNextBtnMarkup(currentPage: number): string {
-    return `
-      <button class="btn--inline pagination__btn--prev">
-        <svg class="search__icon">
-          <use href="src/img/icons.svg#icon-arrow-left"></use>
-        </svg>
-        <span>Page ${currentPage - 1}</span>
-      </button>
-      <button class="btn--inline pagination__btn--next">
-        <span>Page ${currentPage + 1}</span>
-        <svg class="search__icon">
-            <use href="src/img/icons.svg#icon-arrow-right"></use>
-        </svg>
-      </button>
-    `;
+    return (
+      this._prevPageBtnMarkup(currentPage) +
+      this._nextPageBtnMarkup(currentPage)
+    );
   }
 
   private _prevPageBtnMarkup(currentPage: number): string {
     return `
-      <button class="btn--inline pagination__btn--prev">
+      <button 
+        class="btn--inline pagination__btn--prev"
+        data-goto="${currentPage - 1}" 
+      >
         <svg class="search__icon">
           <use href="src/img/icons.svg#icon-arrow-left"></use>
         </svg>
@@ -65,7 +58,10 @@ class PaginationView extends View {
 
   private _nextPageBtnMarkup(currentPage: number): string {
     return `
-      <button class="btn--inline pagination__btn--next">
+      <button 
+        class="btn--inline pagination__btn--next"
+        data-goto="${currentPage + 1}"
+      >
         <span>Page ${currentPage + 1}</span>
         <svg class="search__icon">
             <use href="src/img/icons.svg#icon-arrow-right"></use>

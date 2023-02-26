@@ -1,4 +1,4 @@
-import { Handler } from "../types/type";
+import { Controller } from "../types/type";
 import { View } from "./View";
 import fracty from "fracty";
 
@@ -8,7 +8,7 @@ class RecipeView extends View {
   protected message = `Start by searching for a recipe or an ingredient. Have fun!`;
 
   // Publisher Subscriber Pattern - init
-  renderHandler(recipeController: Handler): void {
+  renderHandler(recipeController: Controller): void {
     ["hashchange", "load"].forEach((ev) =>
       window.addEventListener(ev, recipeController)
     );

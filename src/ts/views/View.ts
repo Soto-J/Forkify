@@ -12,7 +12,6 @@ export class View {
     this.data = data;
 
     const markup = this.generateMarkup();
-
     this.parentEl!.innerHTML = "";
     this.parentEl!.insertAdjacentHTML("afterbegin", markup);
   }
@@ -21,22 +20,16 @@ export class View {
     this.parentEl!.innerHTML = "";
 
     const spinnerMarkup = this.spinnerMarkup();
-
     this.parentEl.insertAdjacentHTML("afterbegin", spinnerMarkup);
   }
 
   renderMessage(message = this.message): void {
     this.parentEl!.innerHTML = "";
-
-    this.parentEl.insertAdjacentHTML(
-      "afterbegin",
-      this.messageMarkup(message)
-    );
+    this.parentEl.insertAdjacentHTML("afterbegin", this.messageMarkup(message));
   }
 
   renderErrorMsg(errorMsg = this.errorMessage): void {
     this.parentEl!.innerHTML = "";
-
     this.parentEl.insertAdjacentHTML("afterbegin", this.errorMarkup(errorMsg));
   }
 

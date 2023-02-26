@@ -29,19 +29,26 @@ async function searchController(): Promise<void> {
     await RecipeModel.loadSearchResult(query);
     console.log(RecipeModel.state);
 
-    // Render Results list
-    ResultsView.render(RecipeModel.getSearchResultPerPage(3));
-    // Render Pagination Buttons
+    // Render Results list and Pagination Buttons
+    ResultsView.render(RecipeModel.getSearchResultPerPage());
     PaginationView.render(RecipeModel.state.search);
   } catch (error) {
     ResultsView.renderErrorMsg();
   }
 }
 
+function paginationController(goToPage: number) {
+  // Rerender results and Buttons onClick
+  ResultsView.render(RecipeModel.getSearchResultPerPage(goToPage));
+  PaginationView.render(RecipeModel.state.search);
+
+  console.log(`Testing:`, RecipeModel.state.search.page);
+}
+
 function init() {
   RecipeView.renderHandler(recipeController);
   SearchView.searchHandler(searchController);
-  PaginationView.onClickHandler();
+  PaginationView.onClickHandler(paginationController);
 }
 
 console.log(RecipeModel.state);

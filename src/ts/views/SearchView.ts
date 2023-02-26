@@ -1,4 +1,4 @@
-import { Handler } from "../types/type";
+import { Controller } from "../types/type";
 import { View } from "./View";
 
 class SearchView extends View {
@@ -8,21 +8,17 @@ class SearchView extends View {
 
   getSearchQuery(): string {
     const query = this._searchInputEl.value.trim().toLowerCase();
-    this._clearInput();
+    this._searchInputEl.value = "";
 
     return query;
   }
 
   // Publisher Subscriber
-  searchHandler(searchController: Handler) {
+  searchHandler(controller: Controller) {
     this._parentEl.addEventListener("submit", (e: Event) => {
       e.preventDefault();
-      searchController();
+      controller();
     });
-  }
-
-  private _clearInput() {
-    this._searchInputEl.value = "";
   }
 }
 
