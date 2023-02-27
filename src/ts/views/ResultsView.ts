@@ -5,7 +5,7 @@ class ResultsView extends View {
   protected errorMessage = `No recipes found for your query!`;
   protected message = ``;
 
-  protected override generateMarkup() {
+  protected override generateMarkup(): string {
     console.log(this.data);
 
     return this.data

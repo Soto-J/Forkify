@@ -2,20 +2,20 @@ import { Controller } from "../types/type";
 import { View } from "./View";
 
 class SearchView extends View {
-  protected _parentEl = document.querySelector<HTMLFormElement>(".search")!;
-  protected _searchInputEl =
+  protected parentEl = document.querySelector<HTMLFormElement>(".search")!;
+  protected searchInputEl =
     document.querySelector<HTMLInputElement>(".search__field")!;
 
   getSearchQuery(): string {
-    const query = this._searchInputEl.value.trim().toLowerCase();
-    this._searchInputEl.value = "";
+    const query = this.searchInputEl.value.trim().toLowerCase();
+    this.searchInputEl.value = "";
 
     return query;
   }
 
   // Publisher Subscriber
-  searchHandler(controller: Controller) {
-    this._parentEl.addEventListener("submit", (e: Event) => {
+  searchHandler(controller: Controller): void {
+    this.parentEl.addEventListener("submit", (e: Event) => {
       e.preventDefault();
       controller();
     });

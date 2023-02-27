@@ -4,7 +4,7 @@ class PaginationView extends View {
   protected parentEl = document.querySelector<HTMLDivElement>(".pagination")!;
 
   onClickHandler(controller: any) {
-    this.parentEl.addEventListener("click", (e) => {
+    this.parentEl.addEventListener("click", (e: MouseEvent) => {
       e.preventDefault();
       // only trigger if element has ".btn--inline"
       const btn: HTMLButtonElement = (e.target as HTMLButtonElement).closest(
@@ -12,7 +12,7 @@ class PaginationView extends View {
       )!;
       if (!btn) return;
 
-      const goToPage = Number(btn.dataset.goto);
+      const goToPage = Number(btn.dataset.goToPage);
       controller(goToPage);
     });
   }
@@ -22,8 +22,8 @@ class PaginationView extends View {
     const numOfPages = Math.ceil(
       this.data.results.length / this.data.resultsPerPage
     );
-    console.log(`# Pages = ${numOfPages}`);
-    console.log(`current Page = ${currentPage}`);
+    console.log(`# of Pages: ${numOfPages}`);
+    console.log(`current Page: ${currentPage}`);
 
     if (currentPage === 1 && numOfPages > 1) {
       return this._nextPageBtnMarkup(currentPage);
@@ -46,7 +46,7 @@ class PaginationView extends View {
     return `
       <button 
         class="btn--inline pagination__btn--prev"
-        data-goto="${currentPage - 1}" 
+        data-go-to-page="${currentPage - 1}" 
       >
         <svg class="search__icon">
           <use href="src/img/icons.svg#icon-arrow-left"></use>
@@ -60,7 +60,7 @@ class PaginationView extends View {
     return `
       <button 
         class="btn--inline pagination__btn--next"
-        data-goto="${currentPage + 1}"
+        data-go-to-page="${currentPage + 1}"
       >
         <span>Page ${currentPage + 1}</span>
         <svg class="search__icon">

@@ -1,10 +1,17 @@
-export class View {
+interface IView {
+  render(data: any): void;
+  renderSpinner(): void;
+  renderMessage(message: string): void;
+  renderErrorMsg(errorMsg: string): void;
+}
+
+export class View implements IView {
   protected data: any;
   protected parentEl: any;
   protected message!: string;
   protected errorMessage!: string;
 
-  render(data: any) {
+  render(data: any): void {
     if (!data || (Array.isArray(data) && data.length === 0)) {
       return this.renderErrorMsg();
     }

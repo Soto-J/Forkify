@@ -14,6 +14,19 @@ class RecipeView extends View {
     );
   }
 
+  servingsHandler(controller: any) {
+    this.parentEl.addEventListener("click", (e: MouseEvent) => {
+      const btn: HTMLButtonElement = (e.target as HTMLButtonElement).closest(
+        ".btn--servings-update"
+      )!;
+
+      if (!btn) return;
+
+      const servingsUpdate = Number(btn.dataset.servingsUpdate);
+      controller(servingsUpdate);
+    });
+  }
+
   // *************** HTML markUp ******************* \\
   protected override generateMarkup(): string {
     return `
@@ -48,12 +61,18 @@ class RecipeView extends View {
           </span>
           <span class="recipe__info-text">servings</span>
           <div class="recipe__info-buttons">
-            <button class="btn--tiny btn--increase-servings">
+            <button 
+              class="btn--tiny btn--servings-update"
+              data-servings-update="-1"
+            >
               <svg>
                 <use href="src/img/icons.svg#icon-minus-circle"></use>
               </svg>
             </button>
-            <button class="btn--tiny btn--increase-servings">
+            <button 
+              class="btn--tiny btn--servings-update"
+              data-servings-update="1"
+            >
               <svg>
                 <use href="src/img/icons.svg#icon-plus-circle"></use>
               </svg>
@@ -77,7 +96,7 @@ class RecipeView extends View {
       <div class="recipe__ingredients">
         <h2 class="heading--2">Recipe ingredients</h2>
         <ul class="recipe__ingredient-list">
-          ${this.ingredientsList()}
+          ${this._ingredientsList()}
         </ul>
       </div>
 
@@ -102,7 +121,7 @@ class RecipeView extends View {
     `;
   }
 
-  private ingredientsList(): string {
+  private _ingredientsList(): string {
     return `${this.data.ingredients
       .map(
         (ingredient: any) => `
