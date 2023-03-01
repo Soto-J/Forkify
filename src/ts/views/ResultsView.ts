@@ -6,14 +6,19 @@ class ResultsView extends View {
   protected message = ``;
 
   protected override generateMarkup(): string {
+    const hashId = window.location.hash.slice(1);
     console.log(this.data);
 
     return this.data
       .map((result: any) => {
-        //  preview__link--active
         return `                    
           <li class="preview">
-            <a class="preview__link" href="#${result.id}">
+            <a 
+              class="preview__link ${
+                hashId === result.id ? "preview__link--active" : ""
+              }" 
+              href="#${result.id}"
+            >
               <figure class="preview__fig">
                 <img src="${result.image}" alt="${result.title}" />
               </figure>

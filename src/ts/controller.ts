@@ -4,15 +4,18 @@ import ResultsView from "./views/ResultsView";
 import RecipeView from "./views/RecipeView";
 import SearchView from "./views/SearchView";
 
-// Render main recipe
 async function recipeController(): Promise<void> {
   try {
     const hashId = window.location.hash.slice(1);
+
     if (!hashId) return;
-
     RecipeView.renderSpinner();
-    await RecipeModel.getRecipe(hashId);
 
+    // Update DOM to reflect highlighted recipe
+    ResultsView.updateDOM(RecipeModel.getSearchResultPerPage());
+
+    // Render main recipe
+    await RecipeModel.getRecipe(hashId);
     RecipeView.render(RecipeModel.state.recipe);
   } catch (error) {
     RecipeView.renderErrorMsg();
@@ -51,7 +54,7 @@ function servingsController(servingsUpdate: number): void {
   if (servingsUpdate === 0) return;
 
   RecipeModel.updateServings(servingsUpdate);
-  
+
   RecipeView.updateDOM(RecipeModel.state.recipe);
 }
 
