@@ -1,42 +1,50 @@
 import { API_URL, RES_PER_PAGE } from "../config";
 import { getJSON } from "../helper/helper";
 
-// Will come back to interface
-interface IRecipeModel {
+export interface IRecipeModel {
   state?: State;
 
-  getRecipes(hashId: string): Promise<void>;
+  getRecipe(hashId: string): Promise<void>;
   loadSearchResult(query: string): Promise<void>;
   getSearchResultPerPage(page: number): Ingredient[];
   updateServings(newServings: number): void;
 }
 
-type State = {
-  recipe: Recipe;
-  search: Search;
+export type State = {
+  recipe?: Recipe;
+  search?: Search;
 };
 
-type Recipe = {
-  id: number;
-  title: string;
-  publisher: string;
-  sourceUrl: string;
-  image: string;
+export type Recipe = {
+  id?: number;
+  title?: string;
+  publisher?: string;
+  sourceUrl?: string;
+  image?: string;
   servings: number;
-  cookingTime: number;
-  ingredients: Ingredient[];
+  cookingTime?: number;
+  ingredients?: Ingredient[];
 };
 
-type Search = {
-  query: string;
-  results: Result[];
+export type Search = {
+  query?: string;
+  results?: Result[];
 };
 
-type Ingredient = { quantity: string; unit: number; description: string };
-type Result = { id: number; title: string; image: string };
+export type Ingredient = {
+  quantity?: number | null;
+  unit?: number;
+  description?: string;
+};
+export type Result = {
+  id?: number;
+  title?: string;
+  image?: string;
+  publisher?: string;
+};
 
 // **************************
-class RecipeModel {
+class RecipeModel implements IRecipeModel {
   state = {
     recipe: {
       servings: 0,
@@ -53,7 +61,7 @@ class RecipeModel {
   async getRecipe(hashId: string): Promise<void> {
     try {
       const data = await getJSON(`${API_URL}${hashId}`);
-      const recipe = this._formatRecipeKeys(data);
+      const recipe = this._formatRecipeKeys(data) as Recipe;
 
       this.state.recipe = recipe;
     } catch (error) {
@@ -67,7 +75,7 @@ class RecipeModel {
 
       const data = await getJSON(`${API_URL}?search=${query}`);
       console.log(data);
-      const searchResults = this._formartSearchResultsKeys(data);
+      const searchResults = this._formartSearchResultKeys(data) as Result[];
 
       this.state.search.results = searchResults;
     } catch (error) {
@@ -75,7 +83,7 @@ class RecipeModel {
     }
   }
 
-  getSearchResultPerPage(page = this.state.search.page) {
+  getSearchResultPerPage(page = this.state.search.page): Ingredient[] {
     this.state.search.page = page;
 
     const start = (page - 1) * this.state.search.resultsPerPage;
@@ -95,24 +103,27 @@ class RecipeModel {
   }
 
   // ************* Reformat Keys of Fetched Data ************ \\
-  private _formatRecipeKeys(data: any) {
-    const [recipe] = Object.values(data).map((val: any) => {
-      return {
-        id: val.id,
-        title: val.title,
-        publisher: val.publisher,
-        sourceUrl: val.source_url,
-        image: val.image_url,
-        servings: val.servings,
-        cookingTime: val.cooking_time,
-        ingredients: val.ingredients,
-      };
-    });
+  private _formatRecipeKeys(data: any): Recipe {
+    const recipe = Object.assign(
+      {},
+      {
+        id: data.id,
+        title: data.title,
+        publisher: data.publisher,
+        sourceUrl: data.source_url,
+        image: data.image_url,
+        servings: data.servings,
+        cookingTime: data.cooking_time,
+        ingredients: data.ingredients,
+      }
+    );
+    console.log("recipe", recipe);
+
     return recipe;
   }
 
-  private _formartSearchResultsKeys(data: any) {
-    const results = data.recipes.map((val: any) => {
+  private _formartSearchResultKeys(data: any) {
+    return data.recipes.map((val: any) => {
       return {
         id: val.id,
         title: val.title,
@@ -120,9 +131,7 @@ class RecipeModel {
         publisher: val.publisher,
       };
     });
-    return results;
   }
 }
 
 export default new RecipeModel();
-

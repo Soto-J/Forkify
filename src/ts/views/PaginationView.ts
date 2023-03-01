@@ -22,8 +22,8 @@ class PaginationView extends View {
     const numOfPages = Math.ceil(
       this.data.results.length / this.data.resultsPerPage
     );
-    console.log(`# of Pages: ${numOfPages}`);
-    console.log(`current Page: ${currentPage}`);
+    // console.log(`# of Pages: ${numOfPages}`);
+    // console.log(`current Page: ${currentPage}`);
 
     if (currentPage === 1 && numOfPages > 1) {
       return this._nextPageBtnMarkup(currentPage);

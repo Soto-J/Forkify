@@ -1,4 +1,5 @@
 import { TIME_IN_SEC } from "../config";
+import { Recipe, Result } from "../models/RecipeModel";
 
 async function getJSON(url: string): Promise<any> {
   try {
@@ -9,8 +10,8 @@ async function getJSON(url: string): Promise<any> {
     if (!response.ok) {
       throw new Error(`${data.message} (${response.status})`);
     }
-
-    return data;
+    const [recipeOrResult] = Object.values(data);
+    return recipeOrResult;
   } catch (error) {
     throw error;
   }
