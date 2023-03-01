@@ -8,11 +8,13 @@ export interface IRecipeModel {
   loadSearchResult(query: string): Promise<void>;
   getSearchResultPerPage(page: number): Result[];
   updateServings(newServings: number): void;
+  addBookmark(recipe: Recipe): void;
 }
 
 export type State = {
   recipe: Recipe;
   search: Search;
+  bookmarks: Recipe[];
 };
 
 export type Recipe = {
@@ -24,6 +26,7 @@ export type Recipe = {
   servings: number;
   cookingTime?: number;
   ingredients: Ingredient[];
+  bookmarked?: boolean;
 };
 
 export type Search = {
@@ -58,6 +61,7 @@ class RecipeModel implements IRecipeModel {
       page: 1,
       resultsPerPage: RES_PER_PAGE,
     },
+    bookmarks: [],
   };
 
   async getRecipe(hashId: string): Promise<void> {
@@ -80,7 +84,7 @@ class RecipeModel implements IRecipeModel {
       const searchResults = this._formartSearchResultKeys(data) as Result[];
 
       this.state.search.results = searchResults;
-
+      this.state.search.page = 1;
       console.log(this.state);
     } catch (error) {
       throw error;
@@ -104,6 +108,15 @@ class RecipeModel implements IRecipeModel {
 
     this.state.recipe.servings = newServings;
     console.log(this.state);
+  }
+
+  addBookmark(recipe: Recipe): void {
+    // Add bookmark
+    this.state.bookmarks.push(recipe);
+
+    if (recipe.id === this.state.recipe.id) {
+      this.state.recipe.bookmarked = true;
+    }
   }
 
   // ************* Reformat Keys of Fetched Data ************ \\

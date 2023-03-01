@@ -28,6 +28,14 @@ class RecipeView extends View {
     });
   }
 
+  bookmarkHandler(controller: any) {
+    this.parentEl.addEventListener("click", (e) => {
+      const bookmarkBtn = (e.target as HTMLButtonElement).closest(".btn--round");
+      if (!bookmarkBtn) return;
+      controller();
+    });
+  }
+
   // *************** HTML markUp ******************* \\
   protected override generateMarkup(): string {
     this.data = this.data as Recipe;
