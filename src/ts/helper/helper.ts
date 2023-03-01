@@ -1,5 +1,4 @@
 import { TIME_IN_SEC } from "../config";
-import { Recipe, Result } from "../models/RecipeModel";
 
 async function getJSON(url: string): Promise<any> {
   try {

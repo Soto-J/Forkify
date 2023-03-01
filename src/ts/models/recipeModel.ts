@@ -2,17 +2,17 @@ import { API_URL, RES_PER_PAGE } from "../config";
 import { getJSON } from "../helper/helper";
 
 export interface IRecipeModel {
-  state?: State;
+  state: State;
 
   getRecipe(hashId: string): Promise<void>;
   loadSearchResult(query: string): Promise<void>;
-  getSearchResultPerPage(page: number): Ingredient[];
+  getSearchResultPerPage(page: number): Result[];
   updateServings(newServings: number): void;
 }
 
 export type State = {
-  recipe?: Recipe;
-  search?: Search;
+  recipe: Recipe;
+  search: Search;
 };
 
 export type Recipe = {
@@ -23,29 +23,31 @@ export type Recipe = {
   image?: string;
   servings: number;
   cookingTime?: number;
-  ingredients?: Ingredient[];
+  ingredients: Ingredient[];
 };
 
 export type Search = {
-  query?: string;
-  results?: Result[];
+  query: string;
+  results: Result[];
+  page: number;
+  resultsPerPage: number;
 };
 
 export type Ingredient = {
-  quantity?: number | null;
-  unit?: number;
-  description?: string;
+  quantity: number;
+  unit: number;
+  description: string;
 };
 export type Result = {
-  id?: number;
-  title?: string;
-  image?: string;
-  publisher?: string;
+  id: number;
+  title: string;
+  image: string;
+  publisher: string;
 };
 
 // **************************
 class RecipeModel implements IRecipeModel {
-  state = {
+  state: State = {
     recipe: {
       servings: 0,
       ingredients: [],
@@ -74,16 +76,18 @@ class RecipeModel implements IRecipeModel {
       this.state.search.query = query;
 
       const data = await getJSON(`${API_URL}?search=${query}`);
-      console.log(data);
+
       const searchResults = this._formartSearchResultKeys(data) as Result[];
 
       this.state.search.results = searchResults;
+
+      console.log(this.state);
     } catch (error) {
       throw error;
     }
   }
 
-  getSearchResultPerPage(page = this.state.search.page): Ingredient[] {
+  getSearchResultPerPage(page = this.state.search.page): Result[] {
     this.state.search.page = page;
 
     const start = (page - 1) * this.state.search.resultsPerPage;
@@ -92,9 +96,9 @@ class RecipeModel implements IRecipeModel {
     return this.state.search.results.slice(start, end);
   }
 
-  updateServings(newServings: number) {
+  updateServings(newServings: number): void {
     console.log(`Update to: ${newServings}`);
-    this.state.recipe.ingredients.forEach((ing: any) => {
+    this.state.recipe.ingredients!.forEach((ing: Ingredient) => {
       ing.quantity = (ing.quantity * newServings) / this.state.recipe.servings!;
     });
 
@@ -104,7 +108,7 @@ class RecipeModel implements IRecipeModel {
 
   // ************* Reformat Keys of Fetched Data ************ \\
   private _formatRecipeKeys(data: any): Recipe {
-    const recipe = Object.assign(
+    return Object.assign(
       {},
       {
         id: data.id,
@@ -117,13 +121,10 @@ class RecipeModel implements IRecipeModel {
         ingredients: data.ingredients,
       }
     );
-    console.log("recipe", recipe);
-
-    return recipe;
   }
 
-  private _formartSearchResultKeys(data: any) {
-    return data.recipes.map((val: any) => {
+  private _formartSearchResultKeys(data: any): Result[] {
+    return data.map((val: any) => {
       return {
         id: val.id,
         title: val.title,
