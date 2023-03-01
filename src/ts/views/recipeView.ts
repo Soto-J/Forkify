@@ -1,3 +1,4 @@
+import { Ingredient, Recipe } from "../models/RecipeModel";
 import { Controller } from "../types/type";
 import { View } from "./View";
 import fracty from "fracty";
@@ -29,6 +30,8 @@ class RecipeView extends View {
 
   // *************** HTML markUp ******************* \\
   protected override generateMarkup(): string {
+    this.data = this.data as Recipe;
+
     return `
       <figure class="recipe__fig">
         <img 
@@ -122,9 +125,11 @@ class RecipeView extends View {
   }
 
   private _ingredientsList(): string {
+    this.data = this.data as Recipe;
+
     return `${this.data.ingredients
       .map(
-        (ingredient: any) => `
+        (ingredient: Ingredient) => `
         <li class="recipe__ingredient">
           <svg class="recipe__icon">
             <use href="src/img/icons.svg#icon-check"></use>

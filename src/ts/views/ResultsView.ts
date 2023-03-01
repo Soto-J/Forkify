@@ -1,3 +1,4 @@
+import { Result } from "../models/RecipeModel";
 import { View } from "./View";
 
 class ResultsView extends View {
@@ -7,7 +8,8 @@ class ResultsView extends View {
 
   protected override generateMarkup(): string {
     const hashId = window.location.hash.slice(1);
-    console.log(this.data);
+    console.log("ResultsView", this.data);
+    this.data = this.data as Result[];
 
     return this.data
       .map((result: any) => {

@@ -1,4 +1,7 @@
 import { updateDOMHelper } from "../helper/helper";
+import { Recipe, Result, Search } from "../models/RecipeModel";
+
+type Data = Result[] | Recipe | Search;
 
 interface IView {
   render(data: any): void;
@@ -9,7 +12,7 @@ interface IView {
 }
 
 export class View implements IView {
-  protected data: any;
+  protected data?: Data;
   protected parentEl: any;
   protected message!: string;
   protected errorMessage!: string;
@@ -20,6 +23,7 @@ export class View implements IView {
     }
 
     this.data = data;
+    console.log("View", data);
 
     const markup = this.generateMarkup();
     this.parentEl!.innerHTML = "";
@@ -32,17 +36,17 @@ export class View implements IView {
     }
 
     this.data = data;
-    
+
     // current Snapshot of DOM
     const currentElements: NodeListOf<Element> =
-    this.parentEl.querySelectorAll("*");
+      this.parentEl.querySelectorAll("*");
     // New Snapshot of virtual DOM with updated servings
     const newMarkup = this.generateMarkup();
     const newDOM: DocumentFragment = document
       .createRange()
       .createContextualFragment(newMarkup);
     const newElements: NodeListOf<Element> = newDOM.querySelectorAll("*");
-    
+
     updateDOMHelper(currentElements, newElements);
   }
 

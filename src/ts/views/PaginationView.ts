@@ -1,3 +1,4 @@
+import { Search } from "../models/RecipeModel";
 import { View } from "./View";
 
 class PaginationView extends View {
@@ -18,6 +19,8 @@ class PaginationView extends View {
   }
 
   protected generateMarkup(): string {
+    this.data = this.data as Search;
+
     const currentPage = this.data.page;
     const numOfPages = Math.ceil(
       this.data.results.length / this.data.resultsPerPage
