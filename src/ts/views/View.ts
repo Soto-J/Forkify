@@ -1,5 +1,8 @@
+import { updateDOMHelper } from "../helper/helper";
+
 interface IView {
   render(data: any): void;
+  updateDOM(data: any): void;
   renderSpinner(): void;
   renderMessage(message: string): void;
   renderErrorMsg(errorMsg: string): void;
@@ -21,6 +24,26 @@ export class View implements IView {
     const markup = this.generateMarkup();
     this.parentEl!.innerHTML = "";
     this.parentEl!.insertAdjacentHTML("afterbegin", markup);
+  }
+
+  updateDOM(data: any): void {
+    if (!data || (Array.isArray(data) && data.length === 0)) {
+      return this.renderErrorMsg();
+    }
+
+    this.data = data;
+    
+    // current Snapshot of DOM
+    const currentElements: NodeListOf<Element> =
+    this.parentEl.querySelectorAll("*");
+    // New Snapshot of virtual DOM with updated servings
+    const newMarkup = this.generateMarkup();
+    const newDOM: DocumentFragment = document
+      .createRange()
+      .createContextualFragment(newMarkup);
+    const newElements: NodeListOf<Element> = newDOM.querySelectorAll("*");
+    
+    updateDOMHelper(currentElements, newElements);
   }
 
   renderSpinner(): void {

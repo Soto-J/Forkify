@@ -51,7 +51,8 @@ function servingsController(servingsUpdate: number): void {
   if (servingsUpdate === 0) return;
 
   RecipeModel.updateServings(servingsUpdate);
-  RecipeView.render(RecipeModel.state.recipe);
+  
+  RecipeView.updateDOM(RecipeModel.state.recipe);
 }
 
 function init() {

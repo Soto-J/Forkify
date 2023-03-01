@@ -27,11 +27,13 @@ class PaginationView extends View {
 
     if (currentPage === 1 && numOfPages > 1) {
       return this._nextPageBtnMarkup(currentPage);
-    } else if (currentPage === numOfPages && numOfPages > 1) {
-      return this._prevPageBtnMarkup(currentPage);
-    } else {
-      return this._prevAndNextBtnMarkup(currentPage);
     }
+    
+    if (currentPage === numOfPages && numOfPages > 1) {
+      return this._prevPageBtnMarkup(currentPage);
+    }
+
+    return this._prevAndNextBtnMarkup(currentPage);
   }
 
   // ********** HTML Button Markups *********** \\

@@ -14,7 +14,7 @@ class RecipeView extends View {
     );
   }
 
-  servingsHandler(controller: any) {
+  servingsHandler(controller: any): void {
     this.parentEl.addEventListener("click", (e: MouseEvent) => {
       const btn: HTMLButtonElement = (e.target as HTMLButtonElement).closest(
         ".btn--servings-update"

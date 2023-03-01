@@ -7,7 +7,7 @@ interface IRecipeModel {
 
   getRecipes(hashId: string): Promise<void>;
   loadSearchResult(query: string): Promise<void>;
-  getSearchResultPerPage(page: number): Ingredients[];
+  getSearchResultPerPage(page: number): Ingredient[];
   updateServings(newServings: number): void;
 }
 
@@ -24,16 +24,16 @@ type Recipe = {
   image: string;
   servings: number;
   cookingTime: number;
-  ingredients: Ingredients;
+  ingredients: Ingredient[];
 };
 
 type Search = {
   query: string;
-  results: Results;
+  results: Result[];
 };
 
-type Ingredients = [{ quantity: string; unit: number; description: string }];
-type Results = [{ id: number; title: string; image: string }];
+type Ingredient = { quantity: string; unit: number; description: string };
+type Result = { id: number; title: string; image: string };
 
 // **************************
 class RecipeModel {
@@ -125,3 +125,4 @@ class RecipeModel {
 }
 
 export default new RecipeModel();
+
