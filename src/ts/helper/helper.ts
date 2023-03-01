@@ -31,7 +31,7 @@ function updateDOMHelper(currentElement: NodeListOf<Element>, newElement: NodeLi
     // console.log(curEl, newEl.isEqualNode(curEl));
       
     // Update Changed Text
-    if (!newEl.isEqualNode(curEl) && !newEl.firstChild?.nodeValue?.trim()) {
+    if (!newEl.isEqualNode(curEl) && newEl.firstChild?.nodeValue?.trim() !== "") {
       curEl.textContent = newEl.firstChild!.textContent;
       // console.log(newEl.firstChild!.nodeValue!.trim());
     }
