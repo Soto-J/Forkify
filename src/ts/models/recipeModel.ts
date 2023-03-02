@@ -60,7 +60,6 @@ class RecipeModel implements IRecipeModel {
   }
 
   updateServings(newServings: number): void {
-    console.log(`Update to: ${newServings}`);
     this.state.recipe.ingredients!.forEach((ing: Ingredient) => {
       ing.quantity = (ing.quantity * newServings) / this.state.recipe.servings!;
     });
@@ -72,6 +71,7 @@ class RecipeModel implements IRecipeModel {
   addBookmark(recipe: Recipe): void {
     this.state.recipe.bookmarked = true;
     this.state.bookmarks.push(recipe);
+    console.log(this.state.bookmarks);
   }
 
   deleteBookmark(id: number): void {

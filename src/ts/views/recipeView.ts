@@ -1,5 +1,4 @@
-import { Ingredient, Recipe } from "../models/RecipeModel";
-import { Controller } from "../types/type";
+import { Controller, Ingredient, Recipe } from "../types/type";
 import { View } from "./View";
 import fracty from "fracty";
 
@@ -28,7 +27,7 @@ class RecipeView extends View {
     });
   }
 
-  addBookmarkHandler(controller: any) {
+  bookmarkHandler(controller: any) {
     this.parentEl.addEventListener("click", (e) => {
       const bookmarkBtn = (e.target as HTMLButtonElement).closest(
         ".btn--bookmark"

@@ -22,8 +22,13 @@ async function recipeController(): Promise<void> {
   }
 }
 
-function addBookmarkController() {
-  RecipeModel.addBookmark(RecipeModel.state.recipe);
+function bookmarkController() {
+  if (!RecipeModel.state.recipe.bookmarked) {
+    RecipeModel.addBookmark(RecipeModel.state.recipe);
+  } else {
+    RecipeModel.deleteBookmark(RecipeModel.state.recipe.id!);
+  }
+
   console.log(RecipeModel.state.bookmarks);
   RecipeView.updateDOM(RecipeModel.state.recipe);
 }
@@ -66,7 +71,7 @@ function servingsController(servingsUpdate: number): void {
 
 function init() {
   RecipeView.renderHandler(recipeController);
-  RecipeView.addBookmarkHandler(addBookmarkController);
+  RecipeView.bookmarkHandler(bookmarkController);
   SearchView.searchHandler(searchController);
   PaginationView.onClickHandler(paginationController);
   RecipeView.servingsHandler(servingsController);
