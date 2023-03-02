@@ -54,6 +54,7 @@ class RecipeModel implements IRecipeModel {
     recipe: {
       servings: 0,
       ingredients: [],
+      bookmarked: false,
     },
     search: {
       query: "",
@@ -70,6 +71,12 @@ class RecipeModel implements IRecipeModel {
       const recipe = this._formatRecipeKeys(data) as Recipe;
 
       this.state.recipe = recipe;
+
+      this.state.recipe.bookmarked = this.state.bookmarks.some(
+        (bookmark: any) => bookmark.id === hashId
+      );
+
+      console.log(this.state);
     } catch (error) {
       throw error;
     }
@@ -111,29 +118,22 @@ class RecipeModel implements IRecipeModel {
   }
 
   addBookmark(recipe: Recipe): void {
-    // Add bookmark
+    this.state.recipe.bookmarked = true;
     this.state.bookmarks.push(recipe);
-
-    if (recipe.id === this.state.recipe.id) {
-      this.state.recipe.bookmarked = true;
-    }
   }
 
   // ************* Reformat Keys of Fetched Data ************ \\
   private _formatRecipeKeys(data: any): Recipe {
-    return Object.assign(
-      {},
-      {
-        id: data.id,
-        title: data.title,
-        publisher: data.publisher,
-        sourceUrl: data.source_url,
-        image: data.image_url,
-        servings: data.servings,
-        cookingTime: data.cooking_time,
-        ingredients: data.ingredients,
-      }
-    );
+    return {
+      id: data.id,
+      title: data.title,
+      publisher: data.publisher,
+      sourceUrl: data.source_url,
+      image: data.image_url,
+      servings: data.servings,
+      cookingTime: data.cooking_time,
+      ingredients: data.ingredients,
+    };
   }
 
   private _formartSearchResultKeys(data: any): Result[] {

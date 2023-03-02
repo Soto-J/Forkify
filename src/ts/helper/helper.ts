@@ -32,7 +32,7 @@ function updateDOMHelper(currentElement: NodeListOf<Element>, newElement: NodeLi
       
     // Update Changed Text
     if (!newEl.isEqualNode(curEl) && newEl.firstChild?.nodeValue?.trim() !== "") {
-      curEl.textContent = newEl.firstChild!.textContent;
+      curEl.textContent = newEl.firstChild?.textContent!;
       // console.log(newEl.firstChild!.nodeValue!.trim());
     }
 

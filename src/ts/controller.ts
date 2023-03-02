@@ -25,6 +25,7 @@ async function recipeController(): Promise<void> {
 function addBookmarkController() {
   RecipeModel.addBookmark(RecipeModel.state.recipe);
   console.log(RecipeModel.state.bookmarks);
+  RecipeView.updateDOM(RecipeModel.state.recipe);
 }
 
 async function searchController(): Promise<void> {
@@ -65,7 +66,7 @@ function servingsController(servingsUpdate: number): void {
 
 function init() {
   RecipeView.renderHandler(recipeController);
-  RecipeView.bookmarkHandler(addBookmarkController);
+  RecipeView.addBookmarkHandler(addBookmarkController);
   SearchView.searchHandler(searchController);
   PaginationView.onClickHandler(paginationController);
   RecipeView.servingsHandler(servingsController);

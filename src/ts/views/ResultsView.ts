@@ -7,9 +7,8 @@ class ResultsView extends View {
   protected message = ``;
 
   protected override generateMarkup(): string {
-    const hashId = window.location.hash.slice(1);
-    console.log("ResultsView", this.data);
     this.data = this.data as Result[];
+    const hashId = window.location.hash.slice(1);
 
     return this.data
       .map((result: any) => {

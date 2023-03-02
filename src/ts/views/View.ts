@@ -23,7 +23,7 @@ export class View implements IView {
     }
 
     this.data = data;
-    console.log("View", data);
+    // console.log("View", data);
 
     const markup = this.generateMarkup();
     this.parentEl!.innerHTML = "";
