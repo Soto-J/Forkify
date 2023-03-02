@@ -1,4 +1,5 @@
-import { Search } from "../models/RecipeModel";
+
+import { Search } from "../types/type";
 import { View } from "./View";
 
 class PaginationView extends View {
@@ -18,7 +19,7 @@ class PaginationView extends View {
     });
   }
 
-  protected generateMarkup(): string {
+  protected override generateMarkup(): string {
     this.data = this.data as Search;
 
     const currentPage = this.data.page;

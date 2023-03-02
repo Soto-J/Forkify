@@ -1,5 +1,5 @@
-import PaginationView from "./views/PaginationView";
 import RecipeModel from "./models/RecipeModel";
+import PaginationView from "./views/PaginationView";
 import ResultsView from "./views/ResultsView";
 import RecipeView from "./views/RecipeView";
 import SearchView from "./views/SearchView";
@@ -23,7 +23,9 @@ async function recipeController(): Promise<void> {
 }
 
 function bookmarkController() {
-  if (!RecipeModel.state.recipe.bookmarked) {
+  const isBookmarked = RecipeModel.state.recipe.bookmarked;
+
+  if (isBookmarked) {
     RecipeModel.addBookmark(RecipeModel.state.recipe);
   } else {
     RecipeModel.deleteBookmark(RecipeModel.state.recipe.id!);
@@ -31,6 +33,8 @@ function bookmarkController() {
 
   console.log(RecipeModel.state.bookmarks);
   RecipeView.updateDOM(RecipeModel.state.recipe);
+  
+  PaginationView.render(RecipeModel.state.bookmarks);
 }
 
 async function searchController(): Promise<void> {

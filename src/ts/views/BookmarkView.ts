@@ -1,7 +1,13 @@
-class BookmarkView {
-  protected message = `No bookmarks yet. Find a nice recipe and bookmark it :)`;
+import { View } from "./View";
 
-  noBookmarksMarkup() {
+class BookmarkView extends View {
+  protected parentEl = <HTMLUListElement>(
+    document.querySelector(".bookmarks__list")
+  );
+  protected errorMessage = `No bookmarks yet. Find a nice recipe and bookmark it :)`;
+  protected message = ``;
+
+  protected override generateMarkup() {
     return `
       <div class="message">
         <div>
