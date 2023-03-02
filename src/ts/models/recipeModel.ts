@@ -1,54 +1,7 @@
+import { IRecipeModel, State, Result, Ingredient, Recipe } from "../types/type";
 import { API_URL, RES_PER_PAGE } from "../config";
 import { getJSON } from "../helper/helper";
 
-export interface IRecipeModel {
-  state: State;
-
-  getRecipe(hashId: string): Promise<void>;
-  loadSearchResult(query: string): Promise<void>;
-  getSearchResultPerPage(page: number): Result[];
-  updateServings(newServings: number): void;
-  addBookmark(recipe: Recipe): void;
-}
-
-export type State = {
-  recipe: Recipe;
-  search: Search;
-  bookmarks: Recipe[];
-};
-
-export type Recipe = {
-  id?: number;
-  title?: string;
-  publisher?: string;
-  sourceUrl?: string;
-  image?: string;
-  servings: number;
-  cookingTime?: number;
-  ingredients: Ingredient[];
-  bookmarked?: boolean;
-};
-
-export type Search = {
-  query: string;
-  results: Result[];
-  page: number;
-  resultsPerPage: number;
-};
-
-export type Ingredient = {
-  quantity: number;
-  unit: number;
-  description: string;
-};
-export type Result = {
-  id: number;
-  title: string;
-  image: string;
-  publisher: string;
-};
-
-// **************************
 class RecipeModel implements IRecipeModel {
   state: State = {
     recipe: {
@@ -68,13 +21,12 @@ class RecipeModel implements IRecipeModel {
   async getRecipe(hashId: string): Promise<void> {
     try {
       const data = await getJSON(`${API_URL}${hashId}`);
-      const recipe = this._formatRecipeKeys(data) as Recipe;
+      this.state.recipe = this._formatRecipeKeys(data);
 
-      this.state.recipe = recipe;
-
-      this.state.recipe.bookmarked = this.state.bookmarks.some(
+      const isBookmarked = this.state.bookmarks.some(
         (bookmark: any) => bookmark.id === hashId
       );
+      this.state.recipe.bookmarked = isBookmarked;
 
       console.log(this.state);
     } catch (error) {
@@ -121,6 +73,25 @@ class RecipeModel implements IRecipeModel {
     this.state.recipe.bookmarked = true;
     this.state.bookmarks.push(recipe);
   }
+
+  deleteBookmark(id: number): void {
+    this.state.recipe.bookmarked = false;
+    this.state.bookmarks = this.state.bookmarks.filter(
+      (recipe) => recipe.id !== id
+    );
+  }
+
+  // addBookmark(recipe: Recipe): void {
+  //   if (this.state.bookmarks.some((rec) => rec.id === recipe.id)) {
+  //     this.state.recipe.bookmarked = false;
+  //     this.state.bookmarks = this.state.bookmarks.filter(
+  //       (rec) => rec.id !== recipe.id
+  //     );
+  //   } else {
+  //     this.state.recipe.bookmarked = true;
+  //     this.state.bookmarks.push(recipe);
+  //   }
+  // }
 
   // ************* Reformat Keys of Fetched Data ************ \\
   private _formatRecipeKeys(data: any): Recipe {

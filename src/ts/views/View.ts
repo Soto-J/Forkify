@@ -1,5 +1,5 @@
+import { Recipe, Result, Search } from "../types/type";
 import { updateDOMHelper } from "../helper/helper";
-import { Recipe, Result, Search } from "../models/RecipeModel";
 
 type Data = Result[] | Recipe | Search;
 

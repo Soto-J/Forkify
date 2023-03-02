@@ -1,4 +1,4 @@
-import { Result } from "../models/RecipeModel";
+import { Result } from "../types/type";
 import { View } from "./View";
 
 class ResultsView extends View {
