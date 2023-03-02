@@ -25,7 +25,7 @@ async function recipeController(): Promise<void> {
 function bookmarkController() {
   const isBookmarked = RecipeModel.state.recipe.bookmarked;
 
-  if (isBookmarked) {
+  if (!isBookmarked) {
     RecipeModel.addBookmark(RecipeModel.state.recipe);
   } else {
     RecipeModel.deleteBookmark(RecipeModel.state.recipe.id!);
@@ -33,8 +33,6 @@ function bookmarkController() {
 
   console.log(RecipeModel.state.bookmarks);
   RecipeView.updateDOM(RecipeModel.state.recipe);
-  
-  PaginationView.render(RecipeModel.state.bookmarks);
 }
 
 async function searchController(): Promise<void> {

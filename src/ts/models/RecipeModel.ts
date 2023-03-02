@@ -26,6 +26,8 @@ class RecipeModel implements IRecipeModel {
       const isBookmarked = this.state.bookmarks.some(
         (bookmark: any) => bookmark.id === hashId
       );
+      console.log(isBookmarked);
+      
       this.state.recipe.bookmarked = isBookmarked;
 
       console.log(this.state);
