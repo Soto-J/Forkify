@@ -1,9 +1,9 @@
 import RecipeModel from "./models/RecipeModel";
-import PaginationView from "./views/PaginationView";
-import ResultsView from "./views/ResultsView";
-import RecipeView from "./views/RecipeView";
-import SearchView from "./views/SearchView";
-import BookmarkView from "./views/BookmarkView";
+import PaginationView from "./views/components/PaginationView";
+import ResultsView from "./views/components/ResultsView";
+import RecipeView from "./views/components/RecipeView";
+import SearchView from "./views/components/SearchView";
+import BookmarkView from "./views/components/BookmarkView";
 
 async function recipeController(): Promise<void> {
   try {
@@ -15,7 +15,7 @@ async function recipeController(): Promise<void> {
     // Update DOM to reflect highlighted recipe
     ResultsView.updateDOM(RecipeModel.getSearchResultPerPage());
     BookmarkView.updateDOM(RecipeModel.state.bookmarks);
-    
+
     // Render main recipe
     await RecipeModel.getRecipe(hashId);
     RecipeView.render(RecipeModel.state.recipe);

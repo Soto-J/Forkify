@@ -1,5 +1,5 @@
-import { Recipe } from "../types/type";
-import { PreviewView } from "./PreviewView";
+import { Recipe } from "../../types/type";
+import { PreviewView } from "../PreviewView";
 
 class BookmarkView extends PreviewView {
   protected parentEl = <HTMLUListElement>(

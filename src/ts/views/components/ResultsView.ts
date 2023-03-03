@@ -1,5 +1,5 @@
-import { Result } from "../types/type";
-import { PreviewView } from "./PreviewView";
+import { Result } from "../../types/type";
+import { PreviewView } from "../PreviewView";
 
 class ResultsView extends PreviewView {
   protected parentEl = document.querySelector<HTMLUListElement>(".results")!;

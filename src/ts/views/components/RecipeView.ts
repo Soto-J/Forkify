@@ -1,5 +1,5 @@
-import { Controller, Ingredient, Recipe } from "../types/type";
-import { View } from "./View";
+import { Controller, Ingredient, Recipe } from "../../types/type";
+import { View } from "../View";
 import fracty from "fracty";
 
 class RecipeView extends View {

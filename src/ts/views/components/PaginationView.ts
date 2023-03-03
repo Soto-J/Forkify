@@ -1,6 +1,5 @@
-
-import { Search } from "../types/type";
-import { View } from "./View";
+import { Search } from "../../types/type";
+import { View } from "../View";
 
 class PaginationView extends View {
   protected parentEl = document.querySelector<HTMLDivElement>(".pagination")!;
@@ -32,7 +31,7 @@ class PaginationView extends View {
     if (currentPage === 1 && numOfPages > 1) {
       return this._nextPageBtnMarkup(currentPage);
     }
-    
+
     if (currentPage === numOfPages && numOfPages > 1) {
       return this._prevPageBtnMarkup(currentPage);
     }

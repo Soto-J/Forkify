@@ -1,5 +1,5 @@
-import { Controller } from "../types/type";
-import { View } from "./View";
+import { Controller } from "../../types/type";
+import { View } from "../View";
 
 class SearchView extends View {
   protected parentEl = document.querySelector<HTMLFormElement>(".search")!;
