@@ -1,11 +1,12 @@
-import { Data, View } from "./View";
+import { Recipe, Result } from "../types/type";
+import { View } from "./View";
 
-export class PreviewView extends View {
+export class ListView extends View {
   protected override generateMarkup(): string {
-    return (this.data as any).map(this._bookmarkList).join("");
+    return (this.data as Recipe[] | Result[]).map(this._listMarkup).join("");
   }
 
-  private _bookmarkList(result: any): string {
+  private _listMarkup(result: Recipe | Result): string {
     const hashId = window.location.hash.slice(1);
 
     return `
