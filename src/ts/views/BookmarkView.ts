@@ -1,3 +1,4 @@
+import { Recipe } from "../types/type";
 import { View } from "./View";
 
 class BookmarkView extends View {
@@ -7,30 +8,34 @@ class BookmarkView extends View {
   protected errorMessage = `No bookmarks yet. Find a nice recipe and bookmark it :)`;
   protected message = ``;
 
-  protected override generateMarkup() {
-    return `
-      <div class="message">
-        <div>
-          <svg>
-            <use href="src/img/icons.svg#icon-smile"></use>
-          </svg>
-        </div>
-        <p>${this.message}</p>
-      </div>
-    `;
+  protected override generateMarkup(): string {
+    this.data = this.data as Recipe[];
+
+    return this.data.map(this._bookmarkList).join("");
   }
-  bookmarkListMarkup() {
+
+  private _bookmarkList(result: Recipe): string {
+    const hashId = window.location.hash.slice(1);
+
     return `
       <li class="preview">
-        <a class="preview__link" href="#23456">
-          <figure class="preview__fig">
-            <img src="src/img/test-1.jpg" alt="Test" />
-          </figure>
-          <div class="preview__data">
-            <h4 class="preview__name">
-              Pasta with Tomato Cream ...
-            </h4>
-            <p class="preview__publisher">The Pioneer Woman</p>
+        <a 
+          class="preview__link ${
+            hashId === result.id ? "preview__link--active" : ""
+          }" 
+          href="#${result.id}"
+        >
+        <figure class="preview__fig">
+          <img src="${result.image}" alt="${result.title}" />
+        </figure>
+        <div class="preview__data">
+          <h4 class="preview__title">${result.title}</h4>
+          <p class="preview__publisher">${result.publisher}</p>
+          <div class="preview__user-generated">
+            <svg>
+              <use href="src/img/icons.svg#icon-user"></use>
+            </svg>
+            </div>
           </div>
         </a>
       </li>

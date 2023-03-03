@@ -3,6 +3,7 @@ import PaginationView from "./views/PaginationView";
 import ResultsView from "./views/ResultsView";
 import RecipeView from "./views/RecipeView";
 import SearchView from "./views/SearchView";
+import BookmarkView from "./views/BookmarkView";
 
 async function recipeController(): Promise<void> {
   try {
@@ -13,7 +14,8 @@ async function recipeController(): Promise<void> {
 
     // Update DOM to reflect highlighted recipe
     ResultsView.updateDOM(RecipeModel.getSearchResultPerPage());
-
+    BookmarkView.updateDOM(RecipeModel.state.bookmarks);
+    
     // Render main recipe
     await RecipeModel.getRecipe(hashId);
     RecipeView.render(RecipeModel.state.recipe);
@@ -33,6 +35,8 @@ function bookmarkController() {
 
   console.log(RecipeModel.state.bookmarks);
   RecipeView.updateDOM(RecipeModel.state.recipe);
+
+  BookmarkView.render(RecipeModel.state.bookmarks);
 }
 
 async function searchController(): Promise<void> {
@@ -57,8 +61,6 @@ function paginationController(goToPage: number): void {
   // onButtonClick - Rerender results list and Buttons
   ResultsView.render(RecipeModel.getSearchResultPerPage(goToPage));
   PaginationView.render(RecipeModel.state.search);
-
-  console.log(`Testing:`, RecipeModel.state.search.page);
 }
 
 // Update Servings

@@ -1,7 +1,7 @@
 import { Recipe, Result, Search } from "../types/type";
 import { updateDOMHelper } from "../helper/helper";
 
-type Data = Result[] | Recipe | Search;
+type Data = Result[] | Recipe | Recipe[] | Search;
 
 interface IView {
   render(data: any): void;
