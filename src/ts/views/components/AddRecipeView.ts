@@ -1,0 +1,56 @@
+import { View } from "../View";
+
+class AddRecipeView extends View {
+  protected parentEl = <HTMLFormElement>document.querySelector(".upload");
+
+  private _overlay = <HTMLDivElement>document.querySelector(".overlay");
+  private _closeModalBtn = document.querySelector(".btn--close-modal")!;
+  private _openModalBtn = <HTMLButtonElement>(
+    document.querySelector(".nav__btn--add-recipe")
+  );
+  private _window = <HTMLDivElement>(
+    document.querySelector(".add-recipe-window")
+  );
+
+  constructor() {
+    super();
+    this._showFormHandler();
+    this._hideFormHandler();
+  }
+
+  onSubmitHandler(controller: any) {
+    this.parentEl.addEventListener("click", (e) => {
+      e.preventDefault();
+      const data = [...(new FormData(this.parentEl) as unknown as [])];
+      
+      controller(data);
+    });
+  }
+
+  private _showFormHandler(): void {
+    this._openModalBtn.addEventListener("click", this._toggleWindow);
+  }
+
+  private _hideFormHandler(): void {
+    this._closeModalBtn.addEventListener("click", this._toggleWindow);
+    this._overlay.addEventListener("click", this._toggleWindow);
+  }
+
+  private _toggleWindow = (): void => {
+    this._overlay.classList.toggle("hidden");
+    this._window.classList.toggle("hidden");
+  };
+
+  // showFormHandler(controller: any) {
+  //   this._openModalBtn.addEventListener("click", (e) => {
+  //     this._overlay.classList.toggle("hidden");
+  //     this._window.classList.toggle("hidden");
+  //   });
+  // }
+
+  protected override generateMarkup(): string {
+    return "";
+  }
+}
+
+export default new AddRecipeView();

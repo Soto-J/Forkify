@@ -4,6 +4,7 @@ import ResultsView from "./views/components/ResultsView";
 import RecipeView from "./views/components/RecipeView";
 import SearchView from "./views/components/SearchView";
 import BookmarkView from "./views/components/BookmarkView";
+import AddRecipeView from "./views/components/AddRecipeView";
 
 async function recipeController(): Promise<void> {
   try {
@@ -22,6 +23,19 @@ async function recipeController(): Promise<void> {
   } catch (error) {
     RecipeView.renderErrorMsg();
   }
+}
+
+// Update Servings
+function servingsController(servingsUpdate: number): void {
+  servingsUpdate += RecipeModel.state.recipe.servings;
+  if (servingsUpdate === 0) return;
+
+  RecipeModel.updateServings(servingsUpdate);
+  RecipeView.updateDOM(RecipeModel.state.recipe);
+}
+
+function addRecipeFormController(newRecipe: any): void {
+  console.log(newRecipe);
 }
 
 function loadBookmarksController() {
@@ -66,18 +80,10 @@ function paginationController(goToPage: number): void {
   PaginationView.render(RecipeModel.state.search);
 }
 
-// Update Servings
-function servingsController(servingsUpdate: number): void {
-  servingsUpdate += RecipeModel.state.recipe.servings;
-  if (servingsUpdate === 0) return;
-
-  RecipeModel.updateServings(servingsUpdate);
-  RecipeView.updateDOM(RecipeModel.state.recipe);
-}
-
 function init() {
   RecipeModel.init(); // Load Bookmarked recipes from localstorage
-
+  
+  AddRecipeView.onSubmitHandler(addRecipeFormController);
   BookmarkView.loadBookmarksHandler(loadBookmarksController);
   RecipeView.renderHandler(recipeController);
   RecipeView.bookmarkHandler(bookmarkController);

@@ -76,7 +76,6 @@ class RecipeModel implements IRecipeModel {
     this.state.bookmarks.push(recipe);
 
     this._persistBookmarks();
-    console.log(this.state.bookmarks);
   }
 
   deleteBookmark(id: number): void {
