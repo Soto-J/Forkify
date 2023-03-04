@@ -6,23 +6,23 @@ export class ListView extends View {
     return (this.data as Recipe[] | Result[]).map(this._listMarkup).join("");
   }
 
-  private _listMarkup(result: Recipe | Result): string {
+  private _listMarkup(data: Recipe | Result): string {
     const hashId = window.location.hash.slice(1);
 
     return `
       <li class="preview">
         <a 
           class="preview__link ${
-            hashId === String(result.id) ? "preview__link--active" : ""
+            hashId === String(data.id) ? "preview__link--active" : ""
           }" 
-          href="#${result.id}"
+          href="#${data.id}"
         >
         <figure class="preview__fig">
-          <img src="${result.image}" alt="${result.title}" />
+          <img src="${data.image}" alt="${data.title}" />
         </figure>
         <div class="preview__data">
-          <h4 class="preview__title">${result.title}</h4>
-          <p class="preview__publisher">${result.publisher}</p>
+          <h4 class="preview__title">${data.title}</h4>
+          <p class="preview__publisher">${data.publisher}</p>
           <div class="preview__user-generated">
             <svg>
               <use href="src/img/icons.svg#icon-user"></use>
