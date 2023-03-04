@@ -18,6 +18,10 @@ class RecipeModel implements IRecipeModel {
     bookmarks: [],
   };
 
+  init() {
+    this.state.bookmarks = JSON.parse(localStorage.getItem("bookmarks")!) || [];
+  }
+
   async getRecipe(hashId: string): Promise<void> {
     try {
       const data = await getJSON(`${API_URL}${hashId}`);
@@ -26,7 +30,7 @@ class RecipeModel implements IRecipeModel {
       const isBookmarked = this.state.bookmarks.some(
         (bookmark: any) => bookmark.id === hashId
       );
-      
+
       this.state.recipe.bookmarked = isBookmarked;
     } catch (error) {
       throw error;
@@ -70,6 +74,8 @@ class RecipeModel implements IRecipeModel {
   addBookmark(recipe: Recipe): void {
     this.state.recipe.bookmarked = true;
     this.state.bookmarks.push(recipe);
+
+    this._persistBookmarks();
     console.log(this.state.bookmarks);
   }
 
@@ -78,19 +84,13 @@ class RecipeModel implements IRecipeModel {
     this.state.bookmarks = this.state.bookmarks.filter(
       (recipe) => recipe.id !== id
     );
+
+    this._persistBookmarks();
   }
 
-  // addBookmark(recipe: Recipe): void {
-  //   if (this.state.bookmarks.some((rec) => rec.id === recipe.id)) {
-  //     this.state.recipe.bookmarked = false;
-  //     this.state.bookmarks = this.state.bookmarks.filter(
-  //       (rec) => rec.id !== recipe.id
-  //     );
-  //   } else {
-  //     this.state.recipe.bookmarked = true;
-  //     this.state.bookmarks.push(recipe);
-  //   }
-  // }
+  private _persistBookmarks() {
+    localStorage.setItem("bookmarks", JSON.stringify(this.state.bookmarks));
+  }
 
   // ************* Reformat Keys of Fetched Data ************ \\
   private _formatRecipeKeys(data: any): Recipe {
