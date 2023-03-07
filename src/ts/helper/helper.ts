@@ -1,6 +1,6 @@
 import { TIME_IN_SEC } from "../config";
 
-async function getJSON(url: string): Promise<any> {
+async function getJSON<T>(url: string): Promise<T> {
   try {
     const response = await Promise.race([fetch(url), timeout(TIME_IN_SEC)]);
 
@@ -9,7 +9,8 @@ async function getJSON(url: string): Promise<any> {
     if (!response.ok) {
       throw new Error(`${data.message} (${response.status})`);
     }
-    const [recipeOrResult] = Object.values(data);
+    const [recipeOrResult] = Object.values<T>(data);
+    
     return recipeOrResult;
   } catch (error) {
     throw error;

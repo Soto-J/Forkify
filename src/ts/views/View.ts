@@ -4,8 +4,8 @@ import { updateDOMHelper } from "../helper/helper";
 export type Data = Result[] | Recipe | Recipe[] | Search;
 
 interface IView {
-  render(data: any): void;
-  updateDOM(data: any): void;
+  render(data: Data): void;
+  updateDOM(data: Data): void;
   renderSpinner(): void;
   renderMessage(message: string): void;
   renderErrorMsg(errorMsg: string): void;
@@ -17,7 +17,7 @@ export class View implements IView {
   protected message!: string;
   protected errorMessage!: string;
 
-  render(data: any): void {
+  render(data: Data): void {
     if (!data || (Array.isArray(data) && data.length === 0)) {
       return this.renderErrorMsg();
     }
@@ -30,7 +30,7 @@ export class View implements IView {
     this.parentEl!.insertAdjacentHTML("afterbegin", markup);
   }
 
-  updateDOM(data: any): void {
+  updateDOM(data: Data): void {
     if (!data || (Array.isArray(data) && data.length === 0)) {
       return this.renderErrorMsg();
     }
