@@ -75,7 +75,7 @@ class RecipeModel implements IRecipeModel {
     this.state.recipe.bookmarked = true;
     this.state.bookmarks.push(recipe);
 
-    this._persistBookmarks();
+    localStorage.setItem("bookmarks", JSON.stringify(this.state.bookmarks));
   }
 
   deleteBookmark(id: number): void {
@@ -84,11 +84,35 @@ class RecipeModel implements IRecipeModel {
       (recipe) => recipe.id !== id
     );
 
-    this._persistBookmarks();
+    localStorage.setItem("bookmarks", JSON.stringify(this.state.bookmarks));
   }
 
-  private _persistBookmarks() {
-    localStorage.setItem("bookmarks", JSON.stringify(this.state.bookmarks));
+  // private _persistBookmarks() {
+  //   localStorage.setItem("bookmarks", JSON.stringify(this.state.bookmarks));
+  // }
+  async uploadRecipe(newRecipe: any) {
+    console.log("New Recipe:", newRecipe);
+
+    const filteredInput = Object.entries(newRecipe).filter(
+      (entry: any) => entry[0].includes("ingredient") && entry[1] !== ""
+    );
+    console.log("Filtered", filteredInput);
+
+    const ingredientsInput = filteredInput.map((ing: any) => {
+      const ingredients = ing[1].replaceAll("", " ").split(",");
+      if (ingredients.length !== 3) {
+        throw new Error("Wrong ingredient! Please use the correct format :)");
+      }
+
+      const [quantity, unit, description] = ingredients;
+
+      return {
+        quantity: Number(quantity),
+        unit: Number(unit) || null,
+        description: description || null,
+      };
+    });
+    console.log(ingredientsInput);
   }
 
   // ************* Reformat Keys of Fetched Data ************ \\

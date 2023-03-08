@@ -25,8 +25,8 @@ async function recipeController(): Promise<void> {
   }
 }
 
-// Update Servings
 function servingsController(servingsUpdate: number): void {
+  // Update Servings
   servingsUpdate += RecipeModel.state.recipe.servings;
   if (servingsUpdate === 0) return;
 
@@ -35,7 +35,8 @@ function servingsController(servingsUpdate: number): void {
 }
 
 function addRecipeFormController(newRecipe: any): void {
-  console.log(newRecipe);
+  // Add Recipe
+  RecipeModel.uploadRecipe(newRecipe);
 }
 
 function loadBookmarksController() {
@@ -59,11 +60,11 @@ function bookmarkController() {
 
 async function searchController(): Promise<void> {
   try {
-    ResultsView.renderSpinner();
-
     const query = SearchView.getSearchQuery();
     if (!query) return;
 
+    ResultsView.renderSpinner();
+    
     await RecipeModel.loadSearchResult(query);
 
     // Render Results list and Pagination Buttons
@@ -82,7 +83,7 @@ function paginationController(goToPage: number): void {
 
 function init() {
   RecipeModel.init(); // Load Bookmarked recipes from localstorage
-  
+
   AddRecipeView.onSubmitHandler(addRecipeFormController);
   BookmarkView.loadBookmarksHandler(loadBookmarksController);
   RecipeView.renderHandler(recipeController);

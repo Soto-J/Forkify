@@ -17,6 +17,7 @@ class SearchView extends View {
   searchHandler(controller: Controller): void {
     this.parentEl.addEventListener("submit", (e: Event) => {
       e.preventDefault();
+
       controller();
     });
   }

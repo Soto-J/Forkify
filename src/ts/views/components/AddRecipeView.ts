@@ -19,14 +19,14 @@ class AddRecipeView extends View {
   }
 
   onSubmitHandler(controller: any) {
-    this.parentEl.addEventListener("click", (e) => {
+    this.parentEl.addEventListener("submit", (e) => {
       e.preventDefault();
       const formData = new FormData(this.parentEl);
       const dataObj = Object.fromEntries(formData);
       const dataArr = [...new FormData(this.parentEl)];
-     
+
       controller(dataObj);
-      controller(dataArr);
+      // controller(dataArr);
     });
   }
 
@@ -43,13 +43,6 @@ class AddRecipeView extends View {
     this._overlay.classList.toggle("hidden");
     this._window.classList.toggle("hidden");
   };
-
-  // showFormHandler(controller: any) {
-  //   this._openModalBtn.addEventListener("click", (e) => {
-  //     this._overlay.classList.toggle("hidden");
-  //     this._window.classList.toggle("hidden");
-  //   });
-  // }
 
   protected override generateMarkup(): string {
     return "";
