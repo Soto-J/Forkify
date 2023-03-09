@@ -134,7 +134,7 @@ class RecipeModel implements IRecipeModel {
       servings: recipe.servings,
       cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients,
-      key: recipe.key,
+      ...(recipe.key && { key: recipe.key }),
     };
   }
 
