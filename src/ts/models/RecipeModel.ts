@@ -1,5 +1,5 @@
 import { IRecipeModel, State, Result, Ingredient, Recipe } from "../types/type";
-import { API_URL, RES_PER_PAGE } from "../config";
+import { API_KEY, API_URL, RES_PER_PAGE } from "../config";
 import { getJSON, postJSON } from "../helper/helper";
 
 class RecipeModel implements IRecipeModel {
@@ -25,7 +25,7 @@ class RecipeModel implements IRecipeModel {
   async getRecipe(hashId: string): Promise<void> {
     try {
       const data = await getJSON(`${API_URL}${hashId}`);
-      this.state.recipe = this._formatRecipeKeys(data);
+      this.state.recipe = this._createRecipeObj(data);
 
       const isBookmarked = this.state.bookmarks.some(
         (bookmark: any) => bookmark.id === hashId
@@ -43,7 +43,7 @@ class RecipeModel implements IRecipeModel {
 
       const data = await getJSON(`${API_URL}?search=${query}`);
 
-      const searchResults = this._formartSearchResultKeys(data) as Result[];
+      const searchResults = this._creaSearchResultArray(data) as Result[];
 
       this.state.search.results = searchResults;
       this.state.search.page = 1;
@@ -86,44 +86,41 @@ class RecipeModel implements IRecipeModel {
 
     localStorage.setItem("bookmarks", JSON.stringify(this.state.bookmarks));
   }
-  
+
   async uploadRecipe(newRecipe: any) {
     console.log("New Recipe:", newRecipe);
     try {
       const filteredInput = Object.entries(newRecipe).filter(
         (entry: any) => entry[0].includes("ingredient") && entry[1] !== ""
       );
-      console.log("Filtered", filteredInput);
 
       const ingredientsInput = filteredInput.map((ing: any) => {
         const ingredients = ing[1].replaceAll(" ", "").split(",");
+
         if (ingredients.length !== 3) {
           throw new Error("Wrong ingredient! Please use the correct format :)");
         }
 
         const [quantity, unit, description] = ingredients;
+
         return {
           quantity: Number(quantity),
           unit: Number(unit) || null,
           description: description || null,
         };
       });
-      console.log(ingredientsInput);
 
-      const recipe = this._formatAddRecipeKeys(newRecipe, ingredientsInput);
-      console.log(recipe);
-      // 2815b3a7-2c83-43a4-a400-de9c7cc2e850
-      await postJSON(
-        `${API_URL}key=2815b3a7-2c83-43a4-a400-de9c7cc2e850`,
-        newRecipe
-      );
+      // Reformat keys to Meet POST requirement
+      const recipe = this._createPostRecipeObj(newRecipe, ingredientsInput);
+      const data = await postJSON(`${API_URL}?key=${API_KEY}`, recipe);
+      this.state.recipe = this._createRecipeObj(data.recipe);
     } catch (error) {
       throw error;
     }
   }
 
   // ************* Reformat Keys of Fetched Data ************ \\
-  private _formatRecipeKeys(data: any): Recipe {
+  private _createRecipeObj(data: any): Recipe {
     return {
       id: data.id,
       title: data.title,
@@ -136,7 +133,7 @@ class RecipeModel implements IRecipeModel {
     };
   }
 
-  private _formartSearchResultKeys(data: any): Result[] {
+  private _creaSearchResultArray(data: any): Result[] {
     return data.map((val: any) => {
       return {
         id: val.id,
@@ -147,12 +144,12 @@ class RecipeModel implements IRecipeModel {
     });
   }
 
-  private _formatAddRecipeKeys(newRecipe: any, ingredients: any) {
+  private _createPostRecipeObj(newRecipe: any, ingredients: any) {
     return {
       title: newRecipe.title,
       publisher: newRecipe.publisher,
       source_url: newRecipe.sourceUrl,
-      image_url: newRecipe.imageUrl,
+      image_url: newRecipe.image,
       servings: Number(newRecipe.servings),
       cooking_time: Number(newRecipe.cookingTime),
       ingredients,

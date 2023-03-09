@@ -19,7 +19,7 @@ async function getJSON<T>(url: string): Promise<T> {
 
 async function postJSON(url: string, newRecipe: any) {
   try {
-    const post = await fetch(url, {
+    const POST = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -27,9 +27,14 @@ async function postJSON(url: string, newRecipe: any) {
       body: JSON.stringify(newRecipe),
     });
 
-    const response = await Promise.race([post, timeout(TIME_IN_SEC)]);
-    const data = await response.json();
-    console.log("helper", data);
+    const response = await Promise.race([POST, timeout(TIME_IN_SEC)]);
+    const { data } = await response.json();
+
+    if (!response.ok) {
+      throw new Error(`${data.message} (${response.status})`);
+    }
+
+    return data;
   } catch (error) {
     throw error;
   }

@@ -38,6 +38,7 @@ async function addRecipeFormController(newRecipe: any) {
   // Add Recipe
   try {
     await RecipeModel.uploadRecipe(newRecipe);
+    console.log(RecipeModel.state);
   } catch (error: any) {
     AddRecipeView.renderErrorMsg(error.message);
     console.log(error);
