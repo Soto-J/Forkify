@@ -25,6 +25,7 @@ export type Recipe = {
   cookingTime?: number;
   ingredients: Ingredient[];
   bookmarked?: boolean;
+  key?: string;
 };
 
 export type Search = {

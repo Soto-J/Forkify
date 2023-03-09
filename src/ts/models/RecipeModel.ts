@@ -113,23 +113,28 @@ class RecipeModel implements IRecipeModel {
       // Reformat keys to Meet POST requirement
       const recipe = this._createPostRecipeObj(newRecipe, ingredientsInput);
       const data = await postJSON(`${API_URL}?key=${API_KEY}`, recipe);
+      console.log("Recipe", recipe);
+      console.log("POST DATA:", data);
+
       this.state.recipe = this._createRecipeObj(data.recipe);
+      this.addBookmark(this.state.recipe);
     } catch (error) {
       throw error;
     }
   }
 
   // ************* Reformat Keys of Fetched Data ************ \\
-  private _createRecipeObj(data: any): Recipe {
+  private _createRecipeObj(recipe: any): Recipe {
     return {
-      id: data.id,
-      title: data.title,
-      publisher: data.publisher,
-      sourceUrl: data.source_url,
-      image: data.image_url,
-      servings: data.servings,
-      cookingTime: data.cooking_time,
-      ingredients: data.ingredients,
+      id: recipe.id,
+      title: recipe.title,
+      publisher: recipe.publisher,
+      sourceUrl: recipe.source_url,
+      image: recipe.image_url,
+      servings: recipe.servings,
+      cookingTime: recipe.cooking_time,
+      ingredients: recipe.ingredients,
+      key: recipe.key,
     };
   }
 
