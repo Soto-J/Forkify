@@ -34,9 +34,14 @@ function servingsController(servingsUpdate: number): void {
   RecipeView.updateDOM(RecipeModel.state.recipe);
 }
 
-function addRecipeFormController(newRecipe: any): void {
+async function addRecipeFormController(newRecipe: any) {
   // Add Recipe
-  RecipeModel.uploadRecipe(newRecipe);
+  try {
+    await RecipeModel.uploadRecipe(newRecipe);
+  } catch (error: any) {
+    AddRecipeView.renderErrorMsg(error.message);
+    console.log(error);
+  }
 }
 
 function loadBookmarksController() {
@@ -64,7 +69,7 @@ async function searchController(): Promise<void> {
     if (!query) return;
 
     ResultsView.renderSpinner();
-    
+
     await RecipeModel.loadSearchResult(query);
 
     // Render Results list and Pagination Buttons
@@ -82,6 +87,7 @@ function paginationController(goToPage: number): void {
 }
 
 function init() {
+  // dotnet.config();
   RecipeModel.init(); // Load Bookmarked recipes from localstorage
 
   AddRecipeView.onSubmitHandler(addRecipeFormController);

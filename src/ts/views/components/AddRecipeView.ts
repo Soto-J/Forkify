@@ -26,7 +26,6 @@ class AddRecipeView extends View {
       const dataArr = [...new FormData(this.parentEl)];
 
       controller(dataObj);
-      // controller(dataArr);
     });
   }
 

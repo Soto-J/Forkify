@@ -10,8 +10,26 @@ async function getJSON<T>(url: string): Promise<T> {
       throw new Error(`${data.message} (${response.status})`);
     }
     const [recipeOrResult] = Object.values<T>(data);
-    
+
     return recipeOrResult;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function postJSON(url: string, newRecipe: any) {
+  try {
+    const post = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newRecipe),
+    });
+
+    const response = await Promise.race([post, timeout(TIME_IN_SEC)]);
+    const data = await response.json();
+    console.log("helper", data);
   } catch (error) {
     throw error;
   }
@@ -46,4 +64,4 @@ function updateDOMHelper(currentElement: NodeListOf<Element>, newElement: NodeLi
   });
 }
 
-export { getJSON, timeout, updateDOMHelper };
+export { getJSON, timeout, updateDOMHelper, postJSON };
