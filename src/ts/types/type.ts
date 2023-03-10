@@ -45,6 +45,7 @@ export type Result = {
   title: string;
   image: string;
   publisher: string;
+  key?: string;
 };
 
 export type Handler = () => {};

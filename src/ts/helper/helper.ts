@@ -20,55 +20,12 @@ async function AJAX(url: string, uploadData?: any) {
     }
 
     const [recipeOrResult] = Object.values(data);
-    console.log(recipeOrResult);
 
     return recipeOrResult;
   } catch (error) {
     throw error;
   }
 }
-
-// async function getJSON<T>(url: string): Promise<T> {
-//   try {
-//     const response = await Promise.race([fetch(url), timeout(TIME_IN_SEC)]);
-
-//     const { data } = await response.json();
-
-//     if (!response.ok) {
-//       throw new Error(`${data.message} (${response.status})`);
-//     }
-//     console.log(data);
-
-//     const [recipeOrResult] = Object.values<T>(data);
-
-//     return recipeOrResult;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
-
-// async function postJSON(url: string, newRecipe: any) {
-//   try {
-//     const POST = await fetch(url, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify(newRecipe),
-//     });
-
-//     const response = await Promise.race([POST, timeout(TIME_IN_SEC)]);
-//     const { data } = await response.json();
-
-//     if (!response.ok) {
-//       throw new Error(`${data.message} (${response.status})`);
-//     }
-
-//     return data;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
 
 function timeout(s: number): Promise<never> {
   return new Promise((_, reject) => {
@@ -99,10 +56,4 @@ function updateDOMHelper(currentElement: NodeListOf<Element>, newElement: NodeLi
   });
 }
 
-export {
-  AJAX,
-  // getJSON,
-  // postJSON,
-  timeout,
-  updateDOMHelper,
-};
+export { AJAX, timeout, updateDOMHelper };

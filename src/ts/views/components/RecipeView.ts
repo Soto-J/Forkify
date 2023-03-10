@@ -5,7 +5,7 @@ import fracty from "fracty";
 class RecipeView extends View {
   protected parentEl = document.querySelector<HTMLDivElement>(".recipe")!;
   protected errorMessage = `We could not find that recipe. Please try another one!`;
-  protected message = `Start by searching for a recipe or an ingredient. Have fun!`;
+  protected successMessage = `Start by searching for a recipe or an ingredient. Have fun!`;
 
   // Publisher Subscriber Pattern - init
   renderHandler(recipeController: Controller): void {
@@ -92,7 +92,7 @@ class RecipeView extends View {
           </div>
         </div>
 
-        <div class="recipe__user-generated">
+        <div class="recipe__user-generated ${!this.data.key && "hidden"}">
           <svg>
             <use href="src/img/icons.svg#icon-user"></use>
           </svg>

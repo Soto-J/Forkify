@@ -42,7 +42,7 @@ class RecipeModel implements IRecipeModel {
     try {
       this.state.search.query = query;
       // GET
-      const data = await AJAX(`${API_URL}?search=${query}&key${API_KEY}`);
+      const data = await AJAX(`${API_URL}?search=${query}&key=${API_KEY}`);
 
       const searchResults = this._creaSearchResultArray(data) as Result[];
 
@@ -89,14 +89,13 @@ class RecipeModel implements IRecipeModel {
   }
 
   async uploadRecipe(newRecipe: any) {
-    console.log("New Recipe:", newRecipe);
     try {
       const filteredInput = Object.entries(newRecipe).filter(
         (entry: any) => entry[0].includes("ingredient") && entry[1] !== ""
       );
 
       const ingredientsInput = filteredInput.map((ing: any) => {
-        const ingredients = ing[1].replaceAll(" ", "").split(",");
+        const ingredients = ing[1].split(",").map((val: any) => val.trim());
 
         if (ingredients.length !== 3) {
           throw new Error("Wrong ingredient! Please use the correct format :)");
@@ -106,7 +105,7 @@ class RecipeModel implements IRecipeModel {
 
         return {
           quantity: Number(quantity),
-          unit: Number(unit) || null,
+          unit: unit,
           description: description || null,
         };
       });
@@ -114,8 +113,6 @@ class RecipeModel implements IRecipeModel {
       // Reformat keys to meet POST requirement
       const recipe = this._createPostRecipeObj(newRecipe, ingredientsInput);
       const data = (await AJAX(`${API_URL}?key=${API_KEY}`, recipe)) as any;
-      console.log("Recipe", recipe);
-      console.log("POST DATA:", data);
 
       this.state.recipe = this._createRecipeObj(data);
       this.addBookmark(this.state.recipe);
@@ -140,12 +137,13 @@ class RecipeModel implements IRecipeModel {
   }
 
   private _creaSearchResultArray(data: any): Result[] {
-    return data.map((val: any) => {
+    return data.map((result: any) => {
       return {
-        id: val.id,
-        title: val.title,
-        image: val.image_url,
-        publisher: val.publisher,
+        id: result.id,
+        title: result.title,
+        image: result.image_url,
+        publisher: result.publisher,
+        ...(result.key && { key: result.key }),
       };
     });
   }

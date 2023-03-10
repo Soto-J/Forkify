@@ -14,7 +14,7 @@ interface IView {
 export class View implements IView {
   protected data?: Data;
   protected parentEl: any;
-  protected message!: string;
+  protected successMessage!: string;
   protected errorMessage!: string;
 
   render(data: Data): void {
@@ -23,7 +23,6 @@ export class View implements IView {
     }
 
     this.data = data;
-    // console.log("View", data);
 
     const markup = this.generateMarkup();
     this.parentEl!.innerHTML = "";
@@ -32,7 +31,7 @@ export class View implements IView {
 
   updateDOM(data: Data): void {
     if (!data || (Array.isArray(data) && data.length === 0)) {
-      return this.renderErrorMsg();
+      return;
     }
 
     this.data = data;
@@ -57,7 +56,7 @@ export class View implements IView {
     this.parentEl.insertAdjacentHTML("afterbegin", spinnerMarkup);
   }
 
-  renderMessage(message = this.message): void {
+  renderMessage(message = this.successMessage): void {
     this.parentEl!.innerHTML = "";
     this.parentEl.insertAdjacentHTML("afterbegin", this.messageMarkup(message));
   }
@@ -77,7 +76,7 @@ export class View implements IView {
     `;
   }
 
-  protected messageMarkup(message = this.message): string {
+  protected messageMarkup(message = this.successMessage): string {
     return `
       <div class="message">
         <div>

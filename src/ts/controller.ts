@@ -56,6 +56,7 @@ async function addRecipeFormController(newRecipe: any) {
 
     setTimeout(() => {
       AddRecipeView.toggleForm();
+      // window.location.reload();
     }, FORM_CLOSE_SEC * 1000);
   } catch (error: any) {
     AddRecipeView.renderErrorMsg(error.message);
@@ -84,6 +85,8 @@ function bookmarkController() {
 
 async function searchController(): Promise<void> {
   try {
+    console.log("SearchController!");
+
     const query = SearchView.getSearchQuery();
     if (!query) return;
 
@@ -106,7 +109,6 @@ function paginationController(goToPage: number): void {
 }
 
 function init() {
-  // dotnet.config();
   RecipeModel.init(); // Load Bookmarked recipes from localstorage
 
   AddRecipeView.onSubmitHandler(addRecipeFormController);

@@ -2,7 +2,7 @@ import { View } from "../View";
 
 class AddRecipeView extends View {
   protected parentEl = <HTMLFormElement>document.querySelector(".upload");
-  protected message = "Success! Recipe was uploaded!";
+  protected successMessage = "Success! Recipe was uploaded!";
 
   private _overlay = <HTMLDivElement>document.querySelector(".overlay");
   private _closeFormBtn = document.querySelector(".btn--close-modal")!;
