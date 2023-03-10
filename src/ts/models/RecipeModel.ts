@@ -1,6 +1,6 @@
 import { IRecipeModel, State, Result, Ingredient, Recipe } from "../types/type";
 import { API_KEY, API_URL, RES_PER_PAGE } from "../config";
-import { getJSON, postJSON } from "../helper/helper";
+import { AJAX } from "../helper/helper";
 
 class RecipeModel implements IRecipeModel {
   state: State = {
@@ -24,7 +24,8 @@ class RecipeModel implements IRecipeModel {
 
   async getRecipe(hashId: string): Promise<void> {
     try {
-      const data = await getJSON(`${API_URL}${hashId}`);
+      // GET
+      const data = await AJAX(`${API_URL}${hashId}?key=${API_KEY}`);
       this.state.recipe = this._createRecipeObj(data);
 
       const isBookmarked = this.state.bookmarks.some(
@@ -40,8 +41,8 @@ class RecipeModel implements IRecipeModel {
   async loadSearchResult(query: string): Promise<void> {
     try {
       this.state.search.query = query;
-
-      const data = await getJSON(`${API_URL}?search=${query}`);
+      // GET
+      const data = await AJAX(`${API_URL}?search=${query}&key${API_KEY}`);
 
       const searchResults = this._creaSearchResultArray(data) as Result[];
 
@@ -110,13 +111,13 @@ class RecipeModel implements IRecipeModel {
         };
       });
 
-      // Reformat keys to Meet POST requirement
+      // Reformat keys to meet POST requirement
       const recipe = this._createPostRecipeObj(newRecipe, ingredientsInput);
-      const data = await postJSON(`${API_URL}?key=${API_KEY}`, recipe);
+      const data = (await AJAX(`${API_URL}?key=${API_KEY}`, recipe)) as any;
       console.log("Recipe", recipe);
       console.log("POST DATA:", data);
 
-      this.state.recipe = this._createRecipeObj(data.recipe);
+      this.state.recipe = this._createRecipeObj(data);
       this.addBookmark(this.state.recipe);
     } catch (error) {
       throw error;

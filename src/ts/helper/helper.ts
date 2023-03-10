@@ -1,15 +1,26 @@
 import { TIME_IN_SEC } from "../config";
 
-async function getJSON<T>(url: string): Promise<T> {
+async function AJAX(url: string, uploadData?: any) {
   try {
-    const response = await Promise.race([fetch(url), timeout(TIME_IN_SEC)]);
+    const fetchProvider = uploadData
+      ? fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(uploadData),
+        })
+      : fetch(url);
 
-    const { data } = await response.json();
+    const response = await Promise.race([fetchProvider, timeout(TIME_IN_SEC)]);
+    const { data } = await response?.json();
 
     if (!response.ok) {
       throw new Error(`${data.message} (${response.status})`);
     }
-    const [recipeOrResult] = Object.values<T>(data);
+
+    const [recipeOrResult] = Object.values(data);
+    console.log(recipeOrResult);
 
     return recipeOrResult;
   } catch (error) {
@@ -17,28 +28,47 @@ async function getJSON<T>(url: string): Promise<T> {
   }
 }
 
-async function postJSON(url: string, newRecipe: any) {
-  try {
-    const POST = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newRecipe),
-    });
+// async function getJSON<T>(url: string): Promise<T> {
+//   try {
+//     const response = await Promise.race([fetch(url), timeout(TIME_IN_SEC)]);
 
-    const response = await Promise.race([POST, timeout(TIME_IN_SEC)]);
-    const { data } = await response.json();
+//     const { data } = await response.json();
 
-    if (!response.ok) {
-      throw new Error(`${data.message} (${response.status})`);
-    }
+//     if (!response.ok) {
+//       throw new Error(`${data.message} (${response.status})`);
+//     }
+//     console.log(data);
 
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
+//     const [recipeOrResult] = Object.values<T>(data);
+
+//     return recipeOrResult;
+//   } catch (error) {
+//     throw error;
+//   }
+// }
+
+// async function postJSON(url: string, newRecipe: any) {
+//   try {
+//     const POST = await fetch(url, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(newRecipe),
+//     });
+
+//     const response = await Promise.race([POST, timeout(TIME_IN_SEC)]);
+//     const { data } = await response.json();
+
+//     if (!response.ok) {
+//       throw new Error(`${data.message} (${response.status})`);
+//     }
+
+//     return data;
+//   } catch (error) {
+//     throw error;
+//   }
+// }
 
 function timeout(s: number): Promise<never> {
   return new Promise((_, reject) => {
@@ -69,4 +99,10 @@ function updateDOMHelper(currentElement: NodeListOf<Element>, newElement: NodeLi
   });
 }
 
-export { getJSON, timeout, updateDOMHelper, postJSON };
+export {
+  AJAX,
+  // getJSON,
+  // postJSON,
+  timeout,
+  updateDOMHelper,
+};

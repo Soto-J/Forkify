@@ -5,6 +5,7 @@ import RecipeView from "./views/components/RecipeView";
 import SearchView from "./views/components/SearchView";
 import BookmarkView from "./views/components/BookmarkView";
 import AddRecipeView from "./views/components/AddRecipeView";
+import { FORM_CLOSE_SEC } from "./config";
 
 async function recipeController(): Promise<void> {
   try {
@@ -37,8 +38,25 @@ function servingsController(servingsUpdate: number): void {
 async function addRecipeFormController(newRecipe: any) {
   // Add Recipe
   try {
+    AddRecipeView.renderSpinner();
+
     await RecipeModel.uploadRecipe(newRecipe);
     console.log(RecipeModel.state);
+
+    RecipeView.render(RecipeModel.state.recipe);
+
+    // Success message
+    AddRecipeView.renderMessage();
+
+    // Render BookmarkView after submit
+    BookmarkView.render(RecipeModel.state.bookmarks);
+
+    // Update URL ID
+    window.history.pushState(null, "", `#${RecipeModel.state.recipe.id}`);
+
+    setTimeout(() => {
+      AddRecipeView.toggleForm();
+    }, FORM_CLOSE_SEC * 1000);
   } catch (error: any) {
     AddRecipeView.renderErrorMsg(error.message);
     console.log(error);

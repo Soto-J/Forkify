@@ -2,10 +2,11 @@ import { View } from "../View";
 
 class AddRecipeView extends View {
   protected parentEl = <HTMLFormElement>document.querySelector(".upload");
+  protected message = "Success! Recipe was uploaded!";
 
   private _overlay = <HTMLDivElement>document.querySelector(".overlay");
-  private _closeModalBtn = document.querySelector(".btn--close-modal")!;
-  private _openModalBtn = <HTMLButtonElement>(
+  private _closeFormBtn = document.querySelector(".btn--close-modal")!;
+  private _openFormBtn = <HTMLButtonElement>(
     document.querySelector(".nav__btn--add-recipe")
   );
   private _window = <HTMLDivElement>(
@@ -29,19 +30,19 @@ class AddRecipeView extends View {
     });
   }
 
-  private _showFormHandler(): void {
-    this._openModalBtn.addEventListener("click", this._toggleWindow);
-  }
-
-  private _hideFormHandler(): void {
-    this._closeModalBtn.addEventListener("click", this._toggleWindow);
-    this._overlay.addEventListener("click", this._toggleWindow);
-  }
-
-  private _toggleWindow = (): void => {
+  toggleForm = (): void => {
     this._overlay.classList.toggle("hidden");
     this._window.classList.toggle("hidden");
   };
+
+  private _showFormHandler(): void {
+    this._openFormBtn.addEventListener("click", this.toggleForm);
+  }
+
+  private _hideFormHandler(): void {
+    this._closeFormBtn.addEventListener("click", this.toggleForm);
+    this._overlay.addEventListener("click", this.toggleForm);
+  }
 
   protected override generateMarkup(): string {
     return `
