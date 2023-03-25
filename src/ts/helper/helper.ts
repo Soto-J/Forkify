@@ -1,4 +1,20 @@
 import { TIME_IN_SEC } from "../config";
+import { Ingredient } from "../types/type";
+
+type ResponseData = {
+  data: {
+    recipe: {
+      cooking_time: number;
+      id: number;
+      image_url: string;
+      ingredients: Ingredient[];
+      publisher: string;
+      servings: number;
+      source_url: string;
+      title: string;
+    };
+  };
+};
 
 async function AJAX(url: string, uploadData?: any) {
   try {
