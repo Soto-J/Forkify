@@ -37,8 +37,8 @@ export type Search = {
 
 export type Ingredient = {
   quantity: number;
-  unit: number;
-  description: string;
+  unit?: string;
+  description: string | null;
 };
 export type Result = {
   id: number;

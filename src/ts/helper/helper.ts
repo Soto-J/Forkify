@@ -14,14 +14,14 @@ async function AJAX<T>(url: string, uploadData?: any): Promise<T> {
 
     const response = await Promise.race([fetchProvider, timeout(TIME_IN_SEC)]);
     const { data } = await response.json();
-    console.log("helper", data);
+    // console.log("helper", data);
 
     if (!response.ok) {
       throw new Error(`${data.message} (${response.status})`);
     }
 
     const [recipeOrResult] = Object.values(data);
-    console.log(recipeOrResult);
+    // console.log(recipeOrResult);
 
     return recipeOrResult as T;
   } catch (error) {

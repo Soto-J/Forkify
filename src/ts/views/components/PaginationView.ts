@@ -1,5 +1,6 @@
 import { Search } from "../../types/type";
 import { View } from "../View";
+import Icons from "../../../img/icons.svg";
 
 class PaginationView extends View {
   protected parentEl = document.querySelector<HTMLDivElement>(".pagination")!;
@@ -25,8 +26,6 @@ class PaginationView extends View {
     const numOfPages = Math.ceil(
       this.data.results.length / this.data.resultsPerPage
     );
-    // console.log(`# of Pages: ${numOfPages}`);
-    // console.log(`current Page: ${currentPage}`);
 
     if (currentPage === 1 && numOfPages > 1) {
       return this._nextPageBtnMarkup(currentPage);
@@ -54,7 +53,7 @@ class PaginationView extends View {
         data-go-to-page="${currentPage - 1}" 
       >
         <svg class="search__icon">
-          <use href="src/img/icons.svg#icon-arrow-left"></use>
+          <use href="${Icons}#icon-arrow-left"></use>
         </svg>
         <span>Page ${currentPage - 1}</span>
       </button>
@@ -69,7 +68,7 @@ class PaginationView extends View {
       >
         <span>Page ${currentPage + 1}</span>
         <svg class="search__icon">
-            <use href="src/img/icons.svg#icon-arrow-right"></use>
+            <use href="${Icons}#icon-arrow-right"></use>
         </svg>
       </button>
     `;

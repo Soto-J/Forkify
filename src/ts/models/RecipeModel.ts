@@ -23,6 +23,33 @@ type ResultRecipe = {
 type ResponseRecipeList = {
   recipes: ResultRecipe[];
 };
+type PostRecipe = {
+  cooking_time: number;
+  createdAt?: string;
+  id?: string;
+  image_url: string;
+  ingredients: Ingredient[];
+  key?: string;
+  publisher: string;
+  servings: number;
+  source_url: string;
+  title: string;
+};
+
+type NewRecipe = {
+  cookingTime: string;
+  image: string;
+  "ingredient-1": string;
+  "ingredient-2": string;
+  "ingredient-3": string;
+  "ingredient-4": string;
+  "ingredient-5": string;
+  "ingredient-6": string;
+  publisher: string;
+  servings: string;
+  sourceUrl: string;
+  title: string;
+};
 
 //////////////////
 class RecipeModel implements IRecipeModel {
@@ -71,11 +98,10 @@ class RecipeModel implements IRecipeModel {
         `${API_URL}?search=${query}&key=${API_KEY}`
       );
 
-      const searchResults = this._creaSearchResultArray(data) as Result[];
+      const searchResults = this._creaSearchResultArray<Result>(data);
 
       this.state.search.results = searchResults;
       this.state.search.page = 1;
-      console.log(this.state);
     } catch (error) {
       throw error;
     }
@@ -115,14 +141,16 @@ class RecipeModel implements IRecipeModel {
     localStorage.setItem("bookmarks", JSON.stringify(this.state.bookmarks));
   }
 
-  async uploadRecipe(newRecipe: any) {
+  async uploadRecipe(newRecipe: NewRecipe) {
     try {
+      console.log("NEW", newRecipe);
       const filteredInput = Object.entries(newRecipe).filter(
-        (entry: any) => entry[0].includes("ingredient") && entry[1] !== ""
+        (entry) => entry[0].includes("ingredient") && entry[1] !== ""
       );
+      console.log("FilteredInput", filteredInput);
 
-      const ingredientsInput = filteredInput.map((ing: any) => {
-        const ingredients = ing[1].split(",").map((val: any) => val.trim());
+      const ingredientsInput = filteredInput.map((ing) => {
+        const ingredients = ing[1].split(",").map((val) => val.trim());
 
         if (ingredients.length !== 3) {
           throw new Error("Wrong ingredient! Please use the correct format :)");
@@ -136,12 +164,15 @@ class RecipeModel implements IRecipeModel {
           description: description || null,
         };
       });
+      console.log("IngredientsInput", ingredientsInput);
 
       // Reformat keys to meet POST requirement
       const recipe = this._createPostRecipeObj(newRecipe, ingredientsInput);
-      const data = await AJAX(`${API_URL}?key=${API_KEY}`, recipe);
 
-      this.state.recipe = this._createRecipeObj(data);
+      const data = await AJAX<PostRecipe>(`${API_URL}?key=${API_KEY}`, recipe);
+      console.log("upload", data);
+
+      this.state.recipe = this._createRecipeObj<Recipe>(data);
       this.addBookmark(this.state.recipe);
     } catch (error) {
       throw error;
@@ -149,7 +180,7 @@ class RecipeModel implements IRecipeModel {
   }
 
   // ************* Reformat Keys of Fetched Data ************ \\
-  private _createRecipeObj(recipe: any): Recipe {
+  private _createRecipeObj<T>(recipe: any): T {
     return {
       id: recipe.id,
       title: recipe.title,
@@ -163,7 +194,7 @@ class RecipeModel implements IRecipeModel {
     };
   }
 
-  private _creaSearchResultArray(data: any): Result[] {
+  private _creaSearchResultArray<T>(data: any): T[] {
     return data.map((result: any) => {
       return {
         id: result.id,
@@ -175,7 +206,10 @@ class RecipeModel implements IRecipeModel {
     });
   }
 
-  private _createPostRecipeObj(newRecipe: any, ingredients: any) {
+  private _createPostRecipeObj(
+    newRecipe: NewRecipe,
+    ingredients: Ingredient[]
+  ): PostRecipe {
     return {
       title: newRecipe.title,
       publisher: newRecipe.publisher,
