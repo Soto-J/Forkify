@@ -2,6 +2,29 @@ import { IRecipeModel, State, Result, Ingredient, Recipe } from "../types/type";
 import { API_KEY, API_URL, RES_PER_PAGE } from "../config";
 import { AJAX } from "../helper/helper";
 
+type ResponseRecipe = {
+  recipe: {
+    cooking_time: number;
+    id: string;
+    image_url: string;
+    ingredients: Ingredient[];
+    publisher: string;
+    servings: number;
+    source_url: string;
+    title: string;
+  };
+};
+type ResultRecipe = {
+  id: string;
+  image_url: string;
+  publisher: string;
+  title: string;
+};
+type ResponseRecipeList = {
+  recipes: ResultRecipe[];
+};
+
+//////////////////
 class RecipeModel implements IRecipeModel {
   state: State = {
     recipe: {
@@ -25,7 +48,9 @@ class RecipeModel implements IRecipeModel {
   async getRecipe(hashId: string): Promise<void> {
     try {
       // GET
-      const data = await AJAX(`${API_URL}${hashId}?key=${API_KEY}`);
+      const data = await AJAX<ResponseRecipe>(
+        `${API_URL}${hashId}?key=${API_KEY}`
+      );
       this.state.recipe = this._createRecipeObj(data);
 
       const isBookmarked = this.state.bookmarks.some(
@@ -42,7 +67,9 @@ class RecipeModel implements IRecipeModel {
     try {
       this.state.search.query = query;
       // GET
-      const data = await AJAX(`${API_URL}?search=${query}&key=${API_KEY}`);
+      const data = await AJAX<ResponseRecipeList>(
+        `${API_URL}?search=${query}&key=${API_KEY}`
+      );
 
       const searchResults = this._creaSearchResultArray(data) as Result[];
 
@@ -112,7 +139,7 @@ class RecipeModel implements IRecipeModel {
 
       // Reformat keys to meet POST requirement
       const recipe = this._createPostRecipeObj(newRecipe, ingredientsInput);
-      const data = (await AJAX(`${API_URL}?key=${API_KEY}`, recipe)) as any;
+      const data = await AJAX(`${API_URL}?key=${API_KEY}`, recipe);
 
       this.state.recipe = this._createRecipeObj(data);
       this.addBookmark(this.state.recipe);
