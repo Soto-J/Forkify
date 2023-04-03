@@ -1,7 +1,7 @@
 import { Controller, Ingredient, Recipe } from "../../types/type";
 import { View } from "../View";
 import fracty from "fracty";
-import icons from "src/img/icons.svg";
+import icons from "../../../img/icons.svg";
 
 class RecipeView extends View {
   protected parentEl = document.querySelector<HTMLDivElement>(".recipe")!;
